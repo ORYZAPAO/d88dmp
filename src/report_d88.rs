@@ -1,0 +1,330 @@
+/// Report D88 File
+use std::io::{BufReader, Read};
+use std::mem;
+//extern crate libc;
+//use libc;
+
+//348848 = 0x2b0(ヘッダ) + 40(トラック数) x 2(面) x 16(セクタ/トラック) x
+//                                                   (0x10(セクタヘッダ) + 0x100(セクタデータ))
+
+#[repr(C)]
+#[derive(Debug)]
+///  Header Information at D88 File
+///
+///  D88ファイルのヘッダ情報
+///
+pub struct D88_Header {
+    disk_name: [u8; 17],
+    reserved: [u8; 9],
+    write_protect: u8,
+    disk_type: u8,
+    disk_size: u32,
+    track_tbl: [u32; 164],
+}
+
+#[repr(C)]
+#[derive(Debug)]
+///  Sector Header Information at D88 File
+///
+///  D88ファイルのセクタのヘッダ情報
+///
+pub struct D88_SectorHdr {
+    track: u8,    // Track
+    side: u8,     // Side
+    sec: u8,      // Sector
+    sec_size: u8, // Sector Size
+    number_of_sector: u16,
+    density: u8,
+    deleted_mark: u8,
+    status: u8,
+    reserved: [u8; 5],
+    size_of_data: u16,
+}
+
+/// Report D88 File
+///
+/// D88ファイル情報を表示する。
+///
+/// # Argument
+///
+///  * `reader` BufferReader Instance at D88 File
+///  * `cmdline_indo` Command Line Match Info. by Clap Crate  
+///
+/// # Return
+///  * (none)
+///
+pub unsafe fn report_d88(reader: &mut BufReader<std::fs::File>, cmdline_info: &clap::ArgMatches) {
+    print_title_bar();
+
+    let mut rdsize = report_d88_header(reader, cmdline_info);
+    let mut offset = rdsize;
+
+    rdsize = report_sector(reader, offset, cmdline_info);
+    offset += rdsize;
+    while rdsize != 0 {
+        rdsize = report_sector(reader, offset, cmdline_info);
+        offset += rdsize;
+        //println!("[DEBUG] -->{:x}",rdsize);
+    }
+}
+
+/// Print Tiltle Bar(Helper function)
+///
+/// `report_d88` から呼び出される内部関数。  
+/// タイトルバーを表示
+///
+pub fn print_title_bar() {
+    println!("Offset+0 +1 +2 +3 +4 +5 +6 +7 +8 +9 +a +b +c +d +e +f                 ");
+    println!("----- -----------------------------------------------                 ");
+}
+
+/// Report D88 Header (Helper function)
+///
+/// `report_d88` から呼び出される内部関数。  
+/// D88ファイルのヘッダ情報を表示する
+///
+/// # Argument
+///
+///   * `reader` BufferReader instance at D88 File
+///
+/// # Return
+///
+///   * if Success, return D88 Header Size.  
+///   * if Error, return 0
+///
+pub fn report_d88_header(
+    reader: &mut BufReader<std::fs::File>,
+    cmdline_info: &clap::ArgMatches,
+) -> usize {
+    let mut buf: [u8; mem::size_of::<D88_Header>()] = [0; mem::size_of::<D88_Header>()]; // Header Buffer
+
+    // Get Command Line Option "-n"
+    let noinfo_flg: bool = cmdline_info.is_present("noinfo");
+
+    if let Ok(read_size) = reader.read(&mut buf) {
+        unsafe {
+            print_16byte(&buf, 0x0000);
+
+            let header = mem::transmute::<[u8; mem::size_of::<D88_Header>()], D88_Header>(buf);
+
+            if !noinfo_flg {
+                // Report D88 Header
+                //
+
+                //let converted: String = String::from_utf8_unchecked( header.disk_name.to_vec()).unwrap();
+                let disk_name: String = String::from_utf8_unchecked(header.disk_name.to_vec());
+                print!("Name({}), ", disk_name);
+                print!(
+                    "WriteProtect({}), ",
+                    match header.write_protect {
+                        0x10 => "Protected",
+                        0x00 => "None",
+                        _ => "!! Illegal !!",
+                    }
+                );
+                print!(
+                    "Type({} Disk), ",
+                    match header.disk_type {
+                        0x00 => "2D",
+                        0x10 => "2DD",
+                        0x20 => "2HD",
+                        _ => "??",
+                    }
+                );
+                print!("DiskSize({} byte)", header.disk_size);
+            }
+        }
+        println!();
+
+        read_size
+    } else {
+        0
+    }
+}
+
+/// Report Header and Data of Sector (Helper function)
+///
+/// `report_d88` から呼び出される内部関数。  
+/// セクタのヘッダ情報とデータを表示する。  
+///
+/// # Arguments
+///   * `reader` BufferReader instance at D88 File
+///   * `offset` Offset to a Sector at D88 Disk File
+///   * `cmdline_indo` Command Line Match Information by Clap Crate  
+///
+/// # Return
+///   * if Success, return Ok(`header`)  `header` is D88_SectorHdr instance (Sector Header Info.)
+///   * if Error, return Err("err")
+///
+pub unsafe fn report_sector_hdr_dat(
+    reader: &mut BufReader<std::fs::File>,
+    offset: usize,
+    cmdline_info: &clap::ArgMatches,
+) -> Result<D88_SectorHdr, &'static str> {
+    // Get Command Line Option "-n"
+    let noinfo_flg: bool = cmdline_info.is_present("noinfo");
+
+    // Buffer for D88 Sector Header
+    let mut d88_sector_header_buf: [u8; mem::size_of::<D88_SectorHdr>()] =
+        [0; mem::size_of::<D88_SectorHdr>()];
+
+    //
+    if let Ok(rdsize) = reader.read(&mut d88_sector_header_buf) {
+        if rdsize != 0 {
+            // Report 16byte Data
+            //
+            print_16byte(&d88_sector_header_buf, offset);
+
+            // Report Sector Header
+            //
+            let d88_sector_header = mem::transmute::<
+                [u8; mem::size_of::<D88_SectorHdr>()],
+                D88_SectorHdr,
+            >(d88_sector_header_buf);
+
+            if !noinfo_flg {
+                print!(
+                    "Track({}), Side({}), Sector({}), ",
+                    d88_sector_header.track, d88_sector_header.side, d88_sector_header.sec
+                );
+
+                print!("Size({} byte/sec), ", 128 << (d88_sector_header.sec_size));
+                print!(
+                    "NumOfSec({} sec/track), ",
+                    d88_sector_header.number_of_sector
+                );
+                print!(
+                    "Status({}), ",
+                    match d88_sector_header.status {
+                        0x00 => "OK",           // 正常
+                        0x10 => "DELETED",      // 削除済みデータ
+                        0xa0 => "ID CRC Err",   // ID CRC エラー
+                        0xb0 => "Data CRC Err", // データ CRC エラー
+                        0xe0 => "No Addr Mark", // アドレスマークなし
+                        0xf0 => "No Data Mark", // データマークなし
+                        _ => "??",
+                    }
+                );
+                print!(
+                    "Density({:02x}h), ",
+                    //match d88_sector_header.density {
+                    //    0x00 => "D",  // 倍密度 // dencityの仕様がよく分からない。
+                    //    0x40 => "S",  // 単密度
+                    //    0x01 => "HD", // 高密度
+                    //    _ => "??",
+                    //}
+                    d88_sector_header.density
+                );
+                print!(
+                    "Mark({}), ",
+                    match d88_sector_header.deleted_mark {
+                        0x00 => "NORMAL",
+                        0x10 => "DELETED",
+                        _ => "??",
+                    }
+                );
+                print!("DataSize({} byte), ", d88_sector_header.size_of_data);
+            }
+
+            println!();
+
+            Ok(d88_sector_header) // [u8;16] --> D88_SectorHdr
+        } else {
+            Err("err")
+        }
+    } else {
+        Err("err")
+    }
+}
+
+/// Report Sector (Helper function)
+///
+/// `report_d88` から呼び出される内部関数。  
+/// セクタを表示する。  
+///
+/// # Arguments
+///   * `reader` BufferReader instance at D88 File
+///   * `offset_` Offset to a Sector at D88 Disk File
+///   * `cmdline_indo` Command Line Match Information by Clap Crate  
+///
+/// # Return
+///   * if Success, return next offset at D88 File
+///   * if Error, retrun 0
+///
+pub unsafe fn report_sector(
+    reader: &mut BufReader<std::fs::File>,
+    offset_: usize,
+    cmdline_info: &clap::ArgMatches,
+) -> usize {
+    let mut offset = offset_;
+    let sector_size;
+
+    // Read Header
+    //
+    if let Ok(d88_sector_header) = report_sector_hdr_dat(reader, offset, cmdline_info) {
+        // Sector Header Info
+        offset += 0x10;
+        sector_size = d88_sector_header.size_of_data as usize;
+    } else {
+        return 0;
+    }
+
+    // Read Secrtor
+    //
+    let mut sector_buffer = vec![0; sector_size]; // Get Sector Buffer
+    let mut rdsize = reader.read(&mut sector_buffer).unwrap();
+    while rdsize < sector_size {
+        // 中途までしかリードしていなかったら、残りを読む。RustのBufReaderのデフォルトは8KB単位
+        rdsize += reader.read(&mut sector_buffer[rdsize..]).unwrap();
+        //println!("BBB rdsize {}", rdsize);
+    }
+
+    // Print Sector
+    let mut i: usize = 0;
+    while i < sector_size {
+        print_16byte(&sector_buffer[i..(i + 16)], offset);
+        println!();
+        offset += 0x10;
+        i += 0x10;
+    }
+
+    0x10 + rdsize // SectorHeader(0x10) + SectorSize
+}
+
+/// Print 16byte (Helper function)
+///
+/// `report_d88` から呼び出される内部関数。  
+/// D88ファイルのオフセット情報`offset` と 16byte生データ`buf16`から、16byteを整形して表示する。  
+///
+/// # Argument
+///
+///   * `buf16` Slice to 16 byte Buffer
+///   * `offset` Offset at D88 Disk File
+///
+/// # Return
+///
+///   * Return the value of `offset` plus 16.
+///
+pub fn print_16byte(buf16: &[u8], offset: usize) -> usize {
+    print!("{:05x} ", offset);
+
+    let mut char_pat = [
+        '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.',
+    ];
+
+    for i in 0..16 {
+        unsafe {
+            if libc::isprint(buf16[i] as libc::c_int) != 0 {
+                char_pat[i] = buf16[i] as char;
+            }
+        }
+        print!("{:02x} ", buf16[i]);
+    }
+
+    for p in char_pat.iter() {
+        print!("{}", p);
+    }
+    print!(" ");
+
+    offset + 16
+}
