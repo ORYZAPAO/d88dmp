@@ -3,7 +3,7 @@ use clap::{App, Arg, ArgMatches};
 
 const AUTHOR: &str = "ORYZA (https://github.com/ORYZAPAO)";
 const TOOL_NAME: &str = "d88info";
-const TOOL_VERSION: &str = "ver 0.1";
+const TOOL_VERSION: &str = "ver 0.11";
 
 /// Commad Line Analysis
 ///
@@ -23,17 +23,16 @@ pub fn cli() -> ArgMatches {
         .arg(
             //
             Arg::new("*.D88")
-                .about("D88 Disk Image")
+                .help("D88 Disk Image")
                 .required(true)
                 .index(1),
         )
         .arg(
             // "-n, --noinfo"  No Report D88 Informatyin
             Arg::new("noinfo")
-                .short('n')
-                .long("noinfo")
-                //.value_name("FILE")
-                .about("No infomation"),
+                 .help("No infomation")
+                 .short('n')
+                 .long("noinfo"),
         )
         .get_matches();
 
