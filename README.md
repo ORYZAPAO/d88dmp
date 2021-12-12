@@ -1,6 +1,5 @@
 d88info
 =======
-[![build badge](https://github.com/ORYZAPAO/d88info/blob/main/.github/workflows/rust.yml/badge.svg?branch=master)](https://github.com/ORYZAPAO/d88info/blob/main/.github/workflows/rust.yml)
 
 はじめに
 --------
