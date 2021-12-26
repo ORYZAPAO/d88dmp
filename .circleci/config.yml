@@ -15,8 +15,7 @@ jobs:
     steps:
       - checkout
       - run:
-          rustup install nightly
-          | rustup default nightly
+          rustup default nightly
           | cargo build
           
 
