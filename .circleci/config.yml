@@ -16,7 +16,7 @@ jobs:
       - checkout
       - run:
           rustup install nightly
-          | rust default nightly
+          | rustup default nightly
           | cargo build
           
 
