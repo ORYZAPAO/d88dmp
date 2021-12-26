@@ -16,7 +16,7 @@ jobs:
       - checkout
       - run:
           rustup install nightly
-          cargo build
+          | cargo build
           
 
 # Invoke jobs via workflows
