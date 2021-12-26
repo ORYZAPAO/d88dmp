@@ -28,9 +28,9 @@ pub fn cli() -> ArgMatches {
                 .index(1),
         )
         .arg(
-            // "-n, --noinfo"  No Report D88 Informatyin
+            // "-n, --noinfo"  No Report D88 Information
             Arg::new("noinfo")
-                 .help("No infomation")
+                 .help("No information")
                  .short('n')
                  .long("noinfo"),
         )
