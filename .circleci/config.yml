@@ -1,27 +1,56 @@
 # Use the latest 2.1 version of CircleCI pipeline process engine.
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
-
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  rust-build:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+  build:
     docker:
-      - image: circleci/rust:latest 
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+      - image: circleci/rust
     steps:
       - checkout
       - run:
-          rustup default nightly
-          | cargo build
-          
+          name: rustup version
+          command: rustup --version
+      - run:
+          name: rustup component add
+          command: rustup component add clippy rustfmt
+      - run:
+          name: fmt
+          command: cargo fmt -- --check
+      - restore_cache:
+          keys:
+            - v1-cargo-lock-{{ checksum "Cargo.lock" }}
+      - run:
+          name: build
+          command: cargo build
+      - run:
+          name: lint
+          command: cargo clippy -- -D warnings
+      - save_cache:
+          key: v1-cargo-lock-{{ checksum "Cargo.lock" }}
+          paths:
+            - "/usr/local/cargo/registry"
+            - "target"
 
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
-workflows:
-  rust-build-workflow:
-    jobs:
-      - rust-build
+# Define a job to be invoked later in a workflow.
+# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+#jobs:
+# rust-build:
+#    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+#    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+#    docker:
+#      - image: circleci/rust:latest 
+#    # Add steps to the job
+#    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+#    steps:
+#      - checkout
+#      - run:
+#          rustup default nightly
+#          | cargo build
+#          
+#
+# # Invoke jobs via workflows
+#. # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+#workflows:
+#  rust-build-workflow:
+#    jobs:
+#      - rust-build
