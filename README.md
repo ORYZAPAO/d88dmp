@@ -1,5 +1,6 @@
 d88info
 =======
+![](https://github.com/ORYZAPAO/d88info/workflows/Rust/badge.svg)
 [![CircleCI](https://circleci.com/gh/ORYZAPAO/d88info/tree/main.svg?style=svg)](https://circleci.com/gh/ORYZAPAO/d88info/tree/main)
 
 はじめに
