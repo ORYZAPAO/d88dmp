@@ -3,6 +3,7 @@ use std::io::{BufReader, Read};
 use std::mem;
 //extern crate libc;
 //use libc;
+use ansi_term::Color;
 
 //348848 = 0x2b0(ヘッダ) + 40(トラック数) x 2(面) x 16(セクタ/トラック) x
 //                                                   (0x10(セクタヘッダ) + 0x100(セクタデータ))
@@ -48,7 +49,7 @@ pub struct D88_SectorHdr {
 /// # Argument
 ///
 ///  * `reader` BufferReader Instance at D88 File
-///  * `cmdline_indo` Command Line Match Info. by Clap Crate  
+///  * `cmdline_info` Command Line Match Info. by Clap Crate  
 ///
 /// # Return
 ///  * (none)
@@ -103,7 +104,7 @@ pub fn report_d88_header(
 
     if let Ok(read_size) = reader.read(&mut buf) {
         unsafe {
-            print_16byte(&buf, 0x0000);
+            print_16byte(&buf, 0x0000, ansi_term::Color::Green );
 
             let header = mem::transmute::<[u8; mem::size_of::<D88_Header>()], D88_Header>(buf);
 
@@ -150,7 +151,7 @@ pub fn report_d88_header(
 /// # Arguments
 ///   * `reader` BufferReader instance at D88 File
 ///   * `offset` Offset to a Sector at D88 Disk File
-///   * `cmdline_indo` Command Line Match Information by Clap Crate  
+///   * `cmdline_info` Command Line Match Information by Clap Crate  
 ///
 /// # Return
 ///   * if Success, return Ok(`header`)  `header` is D88_SectorHdr instance (Sector Header Info.)
@@ -173,7 +174,7 @@ pub unsafe fn report_sector_hdr_dat(
         if rdsize != 0 {
             // Report 16byte Data
             //
-            print_16byte(&d88_sector_header_buf, offset);
+            print_16byte(&d88_sector_header_buf, offset, ansi_term::Color::Green );
 
             // Report Sector Header
             //
@@ -245,7 +246,7 @@ pub unsafe fn report_sector_hdr_dat(
 /// # Arguments
 ///   * `reader` BufferReader instance at D88 File
 ///   * `offset_` Offset to a Sector at D88 Disk File
-///   * `cmdline_indo` Command Line Match Information by Clap Crate  
+///   * `cmdline_info` Command Line Match Information by Clap Crate  
 ///
 /// # Return
 ///   * if Success, return next offset at D88 File
@@ -282,7 +283,7 @@ pub unsafe fn report_sector(
     // Print Sector
     let mut i: usize = 0;
     while i < sector_size {
-        print_16byte(&sector_buffer[i..(i + 16)], offset);
+        print_16byte(&sector_buffer[i..(i + 16)], offset, ansi_term::Color::RGB(150,150,150) );
         println!();
         offset += 0x10;
         i += 0x10;
@@ -305,26 +306,33 @@ pub unsafe fn report_sector(
 ///
 ///   * Return the value of `offset` plus 16.
 ///
-pub fn print_16byte(buf16: &[u8], offset: usize) -> usize {
-    print!("{:05x} ", offset);
+pub fn print_16byte(buf16: &[u8], offset: usize, color: ansi_term::Color) -> usize {
 
-    let mut char_pat = [
-        '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.',
-    ];
+  let mut char_pat = [
+    '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.',
+  ];
 
-    for i in 0..16 {
-        unsafe {
-            if libc::isprint(buf16[i] as libc::c_int) != 0 {
-                char_pat[i] = buf16[i] as char;
-            }
-        }
-        print!("{:02x} ", buf16[i]);
+  // Offset Address
+  print!("{} ", Color::Cyan.paint( &(format!("{:05x} ", offset)) )  );
+         
+  // 16 byte
+  let mut byte16_str = String::from("");
+  for i in 0..16 {
+    unsafe {
+      if libc::isprint(buf16[i] as libc::c_int) != 0 {
+        char_pat[i] = buf16[i] as char;
+      }
     }
-
-    for p in char_pat.iter() {
-        print!("{}", p);
-    }
-    print!(" ");
-
-    offset + 16
+    byte16_str.push_str( &(format!("{:02x} ",buf16[i])) );
+  }
+  //print!("{}", Color::White.paint(byte16_str));
+  print!("{}", color.paint(byte16_str) );
+  
+  // Character
+  for p in char_pat.iter() {
+    print!("{}", p);
+  }
+  print!(" ");
+  
+  offset + 16
 }

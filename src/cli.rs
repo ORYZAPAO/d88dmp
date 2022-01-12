@@ -34,6 +34,13 @@ pub fn cli() -> ArgMatches {
                  .short('n')
                  .long("noinfo"),
         )
+        .arg(
+            // "-n, --no-color"  No Color
+            Arg::new("no-color")
+                 .help("No Color")
+                 //.short('n')
+                 .long("no-color"),
+        )
         .get_matches();
 
     match1
