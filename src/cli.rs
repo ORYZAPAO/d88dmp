@@ -30,16 +30,16 @@ pub fn cli() -> ArgMatches {
         .arg(
             // "-n, --noinfo"  No Report D88 Information
             Arg::new("noinfo")
-                 .help("No information")
-                 .short('n')
-                 .long("noinfo"),
+                .help("No information")
+                .short('n')
+                .long("noinfo"),
         )
         .arg(
             // "-n, --no-color"  No Color
             Arg::new("no-color")
-                 .help("No Color")
-                 //.short('n')
-                 .long("no-color"),
+                .help("No Color")
+                //.short('n')
+                .long("no-color"),
         )
         .get_matches();
 

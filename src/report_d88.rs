@@ -104,7 +104,7 @@ pub fn report_d88_header(
 
     if let Ok(read_size) = reader.read(&mut buf) {
         unsafe {
-            print_16byte(&buf, 0x0000, ansi_term::Color::Green );
+            print_16byte(&buf, 0x0000, ansi_term::Color::Green);
 
             let header = mem::transmute::<[u8; mem::size_of::<D88_Header>()], D88_Header>(buf);
 
@@ -174,7 +174,7 @@ pub unsafe fn report_sector_hdr_dat(
         if rdsize != 0 {
             // Report 16byte Data
             //
-            print_16byte(&d88_sector_header_buf, offset, ansi_term::Color::Green );
+            print_16byte(&d88_sector_header_buf, offset, ansi_term::Color::Green);
 
             // Report Sector Header
             //
@@ -283,7 +283,11 @@ pub unsafe fn report_sector(
     // Print Sector
     let mut i: usize = 0;
     while i < sector_size {
-        print_16byte(&sector_buffer[i..(i + 16)], offset, ansi_term::Color::RGB(150,150,150) );
+        print_16byte(
+            &sector_buffer[i..(i + 16)],
+            offset,
+            ansi_term::Color::RGB(150, 150, 150),
+        );
         println!();
         offset += 0x10;
         i += 0x10;
@@ -307,32 +311,31 @@ pub unsafe fn report_sector(
 ///   * Return the value of `offset` plus 16.
 ///
 pub fn print_16byte(buf16: &[u8], offset: usize, color: ansi_term::Color) -> usize {
+    let mut char_pat = [
+        '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.',
+    ];
 
-  let mut char_pat = [
-    '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.',
-  ];
+    // Offset Address
+    print!("{} ", Color::Cyan.paint(&(format!("{:05x} ", offset))));
 
-  // Offset Address
-  print!("{} ", Color::Cyan.paint( &(format!("{:05x} ", offset)) )  );
-         
-  // 16 byte
-  let mut byte16_str = String::from("");
-  for i in 0..16 {
-    unsafe {
-      if libc::isprint(buf16[i] as libc::c_int) != 0 {
-        char_pat[i] = buf16[i] as char;
-      }
+    // 16 byte
+    let mut byte16_str = String::from("");
+    for i in 0..16 {
+        unsafe {
+            if libc::isprint(buf16[i] as libc::c_int) != 0 {
+                char_pat[i] = buf16[i] as char;
+            }
+        }
+        byte16_str.push_str(&(format!("{:02x} ", buf16[i])));
     }
-    byte16_str.push_str( &(format!("{:02x} ",buf16[i])) );
-  }
-  //print!("{}", Color::White.paint(byte16_str));
-  print!("{}", color.paint(byte16_str) );
-  
-  // Character
-  for p in char_pat.iter() {
-    print!("{}", p);
-  }
-  print!(" ");
-  
-  offset + 16
+    //print!("{}", Color::White.paint(byte16_str));
+    print!("{}", color.paint(byte16_str));
+
+    // Character
+    for p in char_pat.iter() {
+        print!("{}", p);
+    }
+    print!(" ");
+
+    offset + 16
 }
