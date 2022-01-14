@@ -3,7 +3,7 @@ use clap::{App, Arg, ArgMatches};
 
 const AUTHOR: &str = "ORYZA (https://github.com/ORYZAPAO)";
 const TOOL_NAME: &str = "d88info";
-const TOOL_VERSION: &str = "ver 0.11a";
+const TOOL_VERSION: &str = "ver 0.12";
 
 /// Commad Line Analysis
 ///
@@ -29,10 +29,10 @@ pub fn cli() -> ArgMatches {
         )
         .arg(
             // "-n, --noinfo"  No Report D88 Information
-            Arg::new("noinfo")
+            Arg::new("no-info")
                 .help("No information")
                 .short('n')
-                .long("noinfo"),
+                .long("no-info"),
         )
         .arg(
             // "-n, --no-color"  No Color
