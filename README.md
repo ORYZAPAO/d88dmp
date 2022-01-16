@@ -51,6 +51,9 @@ Download
 使い方
 ------
 
+![Image](https://github.com/ORYZAPAO/d88info/tree/main/image/d88info_img.png)
+
+
 基本的な使い方は、コマンドライン等からD88形式のファイル名を指定するだけ。
 ```
  $ d88info <D88形式のファイル名>
@@ -125,6 +128,7 @@ $ cargo build --release
 
 更新履歴
 ----------
++ ver0.12a_220116 実行バイナリ登録
 + ver0.12_220105  カラー表示に対応（カラー無効化オプション：--no-colorの追加）
 + ver0.11a_211226  typo
 + ver0.11_211212  clap 3.0.0-rc.4対応。Cargo.lockを登録。Cargo.lockを登録しておかないと、新たにビルドしたとき、新旧のクレート依存で失敗するのね。
