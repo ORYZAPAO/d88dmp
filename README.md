@@ -43,10 +43,7 @@ d88ファイル解析およびRust勉強用として、個人的に作成した�
 
 Download
 ------
-
-準備中  
-（自分でビルドしてください）
-
+実行ファイル [Download](https://github.com/ORYZAPAO/d88info/releases)
 
 使い方
 ------
@@ -77,8 +74,7 @@ OPTIONS:
 $ .\d88info testdata/turboCP_M_formated_disk.d88 
 ```
 
-![example](https://github.com/ORYZAPAO/d88info/blob/main/image/d88info_img.png?raw=true)
-
+[example](https://github.com/ORYZAPAO/d88info/blob/main/image/d88info_img.png?raw=true)
 
 
 ビルド、コンパイル方法
