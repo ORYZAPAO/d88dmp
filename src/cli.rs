@@ -3,7 +3,7 @@ use clap::{App, Arg, ArgMatches};
 
 const AUTHOR: &str = "ORYZA (https://github.com/ORYZAPAO)";
 const TOOL_NAME: &str = "d88info";
-const TOOL_VERSION: &str = "ver 0.12";
+const TOOL_VERSION: &str = "ver 0.12a";
 
 /// Commad Line Analysis
 ///
