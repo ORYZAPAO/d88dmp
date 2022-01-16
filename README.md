@@ -38,7 +38,7 @@ d88ファイル解析およびRust勉強用として、個人的に作成した�
 + Windows(64bit版、Intel)
 + MacOS(64bit版、Intel)
 
---> [Download](https://github.com/ORYZAPAO/d88info/releases)
+--> ![Download](https://github.com/ORYZAPAO/d88info/releases)
 
 開発はLinux環境メインで行っています。  
 他の環境では試していません。
