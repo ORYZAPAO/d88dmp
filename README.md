@@ -54,15 +54,6 @@ Download
 ```
  $ d88info <D88形式のファイル名>
 ```
-以上。
-
-実行例）X1 turbo用のturbo CP/Mでファーマットしたディスクイメージ(CPM_data.d88)を表示  
-
-```
-$ .\d88info testdata/turboCP_M_formated_disk.d88 
-```
-
-![example](https://github.com/ORYZAPAO/d88info/blob/main/image/d88info_img.png?raw=true)
 
 ## usage 
 ```
@@ -79,6 +70,16 @@ OPTIONS:
     -V, --version    バージョン情報を表示
 
 ```
+
+実行例）X1 turbo用のturbo CP/Mでファーマットしたディスクイメージ(CPM_data.d88)を表示  
+
+```
+$ .\d88info testdata/turboCP_M_formated_disk.d88 
+```
+
+![example](https://github.com/ORYZAPAO/d88info/blob/main/image/d88info_img.png?raw=true)
+
+
 
 ビルド、コンパイル方法
 ---------------------
