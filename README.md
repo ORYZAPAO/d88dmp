@@ -62,8 +62,7 @@ Download
 $ .\d88info testdata/turboCP_M_formated_disk.d88 
 ```
 
-![aa](https://github.com/ORYZAPAO/d88info/blob/main/image/d88info_img.png?raw=true)
-
+![example](https://github.com/ORYZAPAO/d88info/blob/main/image/d88info_img.png?raw=true)
 
 ## usage 
 ```
