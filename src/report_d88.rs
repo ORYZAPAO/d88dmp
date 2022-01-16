@@ -133,8 +133,11 @@ impl ReportD88 {
         let mut buf: [u8; mem::size_of::<D88_Header>()] = [0; mem::size_of::<D88_Header>()]; // Header Buffer
 
         // Get Command Line Option "--no-info"
+        //
         let noinfo_flg: bool = self.cmdline_info.is_present("no-info");
 
+        // File Header 
+        //
         if let Ok(read_size) = reader.read(&mut buf) {
             unsafe {
                 self.print_16byte(&buf, 0x0000, ansi_term::Color::Green);
@@ -195,12 +198,15 @@ impl ReportD88 {
         offset: usize,
     ) -> Result<D88_SectorHdr, &'static str> {
         // Get Command Line Option "-n"
+        //
         let noinfo_flg: bool = self.cmdline_info.is_present("no-info");
 
         // Buffer for D88 Sector Header
+        //
         let mut d88_sector_header_buf: [u8; mem::size_of::<D88_SectorHdr>()] =
             [0; mem::size_of::<D88_SectorHdr>()];
 
+        // Sector Header
         //
         if let Ok(rdsize) = reader.read(&mut d88_sector_header_buf) {
             if rdsize != 0 {
@@ -312,6 +318,7 @@ impl ReportD88 {
         }
 
         // Print Sector
+        //
         let mut i: usize = 0;
         while i < sector_size {
             self.print_16byte(
@@ -329,7 +336,8 @@ impl ReportD88 {
 
     /// Print 16byte (Helper function)
     ///
-    /// `report_d88` から呼び出される内部関数。  
+    /// `report_d88` から呼び出される内部関数。
+    /// 16byte表示
     /// D88ファイルのオフセット情報`offset` と 16byte生データ`buf16`から、16byteを整形して表示する。  
     ///
     /// # Argument
@@ -350,6 +358,7 @@ impl ReportD88 {
         let nocolor_flg: bool = self.cmdline_info.is_present("no-color");
 
         // Offset Address
+        //
         if !nocolor_flg {
             print!("{} ", Color::Cyan.paint(&(format!("{:05x} ", offset))));
         } else {
@@ -357,6 +366,7 @@ impl ReportD88 {
         }
 
         // 16 byte
+        //
         let mut byte16_str = String::from("");
         for i in 0..16 {
             unsafe {
@@ -376,11 +386,14 @@ impl ReportD88 {
         }
 
         // Character
+        //
         for p in char_pat.iter() {
             print!("{}", p);
         }
         print!(" ");
 
+        //
+        //
         offset + 16
     }
 }
