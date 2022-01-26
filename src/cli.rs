@@ -1,9 +1,7 @@
-/// Commad Line Analysis
+// Commad Line Analysis
 use clap::{App, Arg, ArgMatches};
 
-const AUTHOR: &str = "ORYZA (https://github.com/ORYZAPAO)";
-const TOOL_NAME: &str = "d88info";
-const TOOL_VERSION: &str = "ver 0.12a";
+use crate::version::*;
 
 /// Commad Line Analysis
 ///
@@ -15,7 +13,7 @@ const TOOL_VERSION: &str = "ver 0.12a";
 /// # Return
 ///   * Return clap::ArgMatches Instance
 ///
-pub fn cli() -> ArgMatches {
+pub fn get_cmdline_param() -> ArgMatches {
     let match1 = App::new(TOOL_NAME)
         .version(TOOL_VERSION)
         .author(AUTHOR)
