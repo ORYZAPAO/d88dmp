@@ -4,8 +4,14 @@ version = "0.12.1"
 authors = ["ORYZAPAO <oryzapao@gmail.com>"]
 edition = "2018"
 repository = "https://github.com/ORYZAPAO/d88info"
-keywords = ["d88", "dump","retropc","pc88","x1"]
-license-file = "MIT"
+keywords = [
+         "d88",
+         "dump",
+         "retropc",
+         "pc88",
+         "x1"
+]
+license = "MIT"
 readme = "README.md"
 description = "d88info is a command line tool that dumps disk image format * .d88 files for retro PC emulators.d88 file dump tool."
 ##documentation = 
@@ -16,5 +22,6 @@ description = "d88info is a command line tool that dumps disk image format * .d8
 libc = "0.2"
 #clap = "2.33.3"
 #clap = "3.0.0-beta.5"
-clap = "3.0.0-rc.4"
+##clap = "3.0.0-rc.4"
+clap = "3.0.13"
 ansi_term = "0.12.1"
