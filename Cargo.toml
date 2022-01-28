@@ -3,6 +3,12 @@ name = "d88info"
 version = "0.12.1"
 authors = ["ORYZAPAO <oryzapao@gmail.com>"]
 edition = "2018"
+repository = "https://github.com/ORYZAPAO/d88info"
+keywords = ["d88", "dump","retropc","pc88","x1"]
+license-file = "MIT"
+readme = "README.md"
+description = "d88info is a command line tool that dumps disk image format * .d88 files for retro PC emulators.d88 file dump tool."
+##documentation = 
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
