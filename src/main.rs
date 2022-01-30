@@ -1,6 +1,7 @@
 mod cli;
 mod d88_header;
 mod report_d88;
+mod report_d88_noinfo;
 mod utility;
 mod version;
 
