@@ -6,7 +6,7 @@ d88dmp
 はじめに
 --------
 
-レトロPCエミュレータ用のディスクイメージ形式*.d88形式のファイルを、byte単位でテキストでダンプするコマンドラインのツールです。  
+日本のレトロPCエミュレータ用のディスクイメージ形式*.d88形式のファイルを、byte単位でテキストでダンプするツールです。  
 d88ファイル解析およびRust勉強用として、個人的に作成したものです。  
 
 出力内容
@@ -73,6 +73,12 @@ $ .\d88dmp testdata/turboCP_M_formated_disk.d88
 ```
 ![example](https://github.com/ORYZAPAO/d88dmp/blob/main/image/d88dmp_img.png?raw=true)
 
+インストール方法
+---------------------
+rustのcargoコマンドから
+```
+cargo install d88dmp
+```
 
 ビルド、コンパイル方法
 ---------------------
