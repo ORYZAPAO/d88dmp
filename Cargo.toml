@@ -1,6 +1,6 @@
 [package]
 name = "d88dmp"
-version = "0.12.3"
+version = "0.12.4"
 authors = ["ORYZAPAO <oryzapao@gmail.com>"]
 edition = "2018"
 repository = "https://github.com/ORYZAPAO/d88dmp"
@@ -13,7 +13,7 @@ keywords = [
 ]
 license = "MIT"
 readme = "README.md"
-description = "d88dmp is a command line tool that dumps disk image format * .d88 files for Retro PC emulators.d88."
+description = "d88dmp is a command line tool that dumps disk image format * .d88 files for Retro PC emulators."
 ##documentation = 
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
