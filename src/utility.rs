@@ -5,7 +5,7 @@ use crate::report_d88::ReportD88;
 impl ReportD88 {
     /// Print Track Bar(Helper function)
     ///
-    /// タイトルバーを表示
+    /// タイトルバーを表示(Track)
     ///
     pub fn print_track_bar(&self) {
         println!("Track Table");
@@ -15,11 +15,11 @@ impl ReportD88 {
 
     /// Print Tiltle Bar(Helper function)
     ///
-    /// タイトルバーを表示
+    /// タイトルバーを表示(Sector)
     ///
     pub fn print_title_bar(&self) {
-        println!("Offst +0 +1 +2 +3 +4 +5 +6 +7 +8 +9 +a +b +c +d +e +f                 ");
-        println!("----- -----------------------------------------------                 ");
+        println!("Offst  +0 +1 +2 +3 +4 +5 +6 +7 +8 +9 +a +b +c +d +e +f                 ");
+        println!("-----  -----------------------------------------------                 ");
     }
 
     /// Print 16byte (Helper function)
@@ -44,9 +44,9 @@ impl ReportD88 {
         // Offset Address
         //
         if !self.nocolor_flg {
-            print!("{} ", Color::Cyan.paint(&(format!("{:05x} ", offset))));
+            print!("{}  ", Color::Cyan.paint(&(format!("{:05x}", offset))));
         } else {
-            print!("{} ", format!("{:05x}", offset));
+            print!("{}  ", format!("{:05x}", offset));
         }
 
         // 16 byte
