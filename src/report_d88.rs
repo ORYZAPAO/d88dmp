@@ -15,6 +15,7 @@ pub struct ReportD88 {
     cmdline_info: clap::ArgMatches,
     pub noinfo_flg: bool,
     pub nocolor_flg: bool,
+    //pub fh: Option<fs::File>,
 }
 
 impl ReportD88 {
@@ -28,6 +29,7 @@ impl ReportD88 {
             cmdline_info: cmdline_info,
             noinfo_flg: _noinfo_flg,
             nocolor_flg: _nocolor_flg,
+            //fh: None,
         }
     }
 
@@ -39,10 +41,12 @@ impl ReportD88 {
     pub fn report(&mut self) {
         if let Some(d88_name) = self.cmdline_info.value_of("*.D88") {
             if let Ok(fh) = fs::File::open(d88_name) {
-                let mut f = BufReader::new(fh);
-
                 unsafe {
-                    self.report_d88(&mut f);
+                    if self.noinfo_flg {
+                        self.report_d88_noinfo(fh);
+                    } else {
+                        self.report_d88(fh);
+                    }
                 }
             } else {
                 println!(" Not Found \"{}\"", d88_name);
@@ -61,14 +65,17 @@ impl ReportD88 {
     /// # Return
     ///  * (none)
     ///
-    pub unsafe fn report_d88(&mut self, reader: &mut BufReader<std::fs::File>) {
-        let mut rdsize = self.report_d88_header(reader);
+    pub unsafe fn report_d88(&mut self, fh: std::fs::File) {
+        //pub unsafe fn report_d88(&mut self) {
+        let mut reader = BufReader::new(fh);
+
+        let mut rdsize = self.report_d88_header(&mut reader);
         let mut offset = rdsize;
 
-        rdsize = self.report_sector(reader, offset);
+        rdsize = self.report_sector(&mut reader, offset);
         offset += rdsize;
         while rdsize != 0 {
-            rdsize = self.report_sector(reader, offset);
+            rdsize = self.report_sector(&mut reader, offset);
             offset += rdsize;
             //println!("[DEBUG] -->{:x}",rdsize);
         }
@@ -106,7 +113,6 @@ impl ReportD88 {
                 for n in 0..164 {
                     if (n % 8) == 0 {
                         println!("");
-                        //print!("Track {} {:06}h ", Color::Yellow.paint(format!("{:3}",n)), header.track_tbl[n]);
 
                         if self.nocolor_flg {
                             print!(
@@ -126,34 +132,34 @@ impl ReportD88 {
                     }
                 }
 
+                // Data
+                //
                 println!("");
                 println!("");
                 self.print_title_bar();
                 self.print_16byte(&buf, 0x0000, ansi_term::Color::Green);
 
-                if !self.noinfo_flg {
-                    //let converted: String = String::from_utf8_unchecked( header.disk_name.to_vec()).unwrap();
-                    let disk_name: String = String::from_utf8_unchecked(header.disk_name.to_vec());
-                    print!("Name({}), ", disk_name);
-                    print!(
-                        "WriteProtect({}), ",
-                        match header.write_protect {
-                            0x10 => "Protected",
-                            0x00 => "None",
-                            _ => "!! Illegal !!",
-                        }
-                    );
-                    print!(
-                        "Type({} Disk), ",
-                        match header.disk_type {
-                            0x00 => "2D",
-                            0x10 => "2DD",
-                            0x20 => "2HD",
-                            _ => "??",
-                        }
-                    );
-                    print!("DiskSize({} byte)", header.disk_size);
-                }
+                //let converted: String = String::from_utf8_unchecked( header.disk_name.to_vec()).unwrap();
+                let disk_name: String = String::from_utf8_unchecked(header.disk_name.to_vec());
+                print!("Name({}), ", disk_name);
+                print!(
+                    "WriteProtect({}), ",
+                    match header.write_protect {
+                        0x10 => "Protected",
+                        0x00 => "None",
+                        _ => "!! Illegal !!",
+                    }
+                );
+                print!(
+                    "Type({} Disk), ",
+                    match header.disk_type {
+                        0x00 => "2D",
+                        0x10 => "2DD",
+                        0x20 => "2HD",
+                        _ => "??",
+                    }
+                );
+                print!("DiskSize({} byte)", header.disk_size);
             }
             println!();
 
@@ -201,49 +207,47 @@ impl ReportD88 {
                     D88_SectorHdr,
                 >(d88_sector_header_buf);
 
-                if !self.noinfo_flg {
-                    print!(
-                        "Track({}), Side({}), Sector({}), ",
-                        d88_sector_header.track, d88_sector_header.side, d88_sector_header.sec
-                    );
+                print!(
+                    "Track({}), Side({}), Sector({}), ",
+                    d88_sector_header.track, d88_sector_header.side, d88_sector_header.sec
+                );
 
-                    print!("Size({} byte/sec), ", 128 << (d88_sector_header.sec_size));
-                    print!(
-                        "NumOfSec({} sec/track), ",
-                        d88_sector_header.number_of_sector
-                    );
-                    print!(
-                        "Status({}), ",
-                        match d88_sector_header.status {
-                            0x00 => "OK",           // 正常
-                            0x10 => "DELETED",      // 削除済みデータ
-                            0xa0 => "ID CRC Err",   // ID CRC エラー
-                            0xb0 => "Data CRC Err", // データ CRC エラー
-                            0xe0 => "No Addr Mark", // アドレスマークなし
-                            0xf0 => "No Data Mark", // データマークなし
-                            _ => "??",
-                        }
-                    );
-                    print!(
-                        "Density({:02x}h), ",
-                        //match d88_sector_header.density {
-                        //    0x00 => "D",  // 倍密度 // dencityの仕様がよく分からない。
-                        //    0x40 => "S",  // 単密度
-                        //    0x01 => "HD", // 高密度
-                        //    _ => "??",
-                        //}
-                        d88_sector_header.density
-                    );
-                    print!(
-                        "Mark({}), ",
-                        match d88_sector_header.deleted_mark {
-                            0x00 => "NORMAL",
-                            0x10 => "DELETED",
-                            _ => "??",
-                        }
-                    );
-                    print!("DataSize({} byte), ", d88_sector_header.size_of_data);
-                }
+                print!("Size({} byte/sec), ", 128 << (d88_sector_header.sec_size));
+                print!(
+                    "NumOfSec({} sec/track), ",
+                    d88_sector_header.number_of_sector
+                );
+                print!(
+                    "Status({}), ",
+                    match d88_sector_header.status {
+                        0x00 => "OK",           // 正常
+                        0x10 => "DELETED",      // 削除済みデータ
+                        0xa0 => "ID CRC Err",   // ID CRC エラー
+                        0xb0 => "Data CRC Err", // データ CRC エラー
+                        0xe0 => "No Addr Mark", // アドレスマークなし
+                        0xf0 => "No Data Mark", // データマークなし
+                        _ => "??",
+                    }
+                );
+                print!(
+                    "Density({:02x}h), ",
+                    //match d88_sector_header.density {
+                    //    0x00 => "D",  // 倍密度 // dencityの仕様がよく分からない。
+                    //    0x40 => "S",  // 単密度
+                    //    0x01 => "HD", // 高密度
+                    //    _ => "??",
+                    //}
+                    d88_sector_header.density
+                );
+                print!(
+                    "Mark({}), ",
+                    match d88_sector_header.deleted_mark {
+                        0x00 => "NORMAL",
+                        0x10 => "DELETED",
+                        _ => "??",
+                    }
+                );
+                print!("DataSize({} byte), ", d88_sector_header.size_of_data);
 
                 println!();
 
