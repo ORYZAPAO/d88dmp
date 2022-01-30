@@ -1,7 +1,7 @@
-d88info
+d88dmp
 =======
-![](https://github.com/ORYZAPAO/d88info/workflows/Rust/badge.svg)
-[![CircleCI](https://circleci.com/gh/ORYZAPAO/d88info/tree/main.svg?style=svg)](https://circleci.com/gh/ORYZAPAO/d88info/tree/main)
+![](https://github.com/ORYZAPAO/d88dmp/workflows/Rust/badge.svg)
+[![CircleCI](https://circleci.com/gh/ORYZAPAO/d88dmp/tree/main.svg?style=svg)](https://circleci.com/gh/ORYZAPAO/d88dmp/tree/main)
 
 はじめに
 --------
@@ -38,7 +38,7 @@ d88ファイル解析およびRust勉強用として、個人的に作成した�
 + Windows(64bit版、Intel)
 + MacOS(64bit版、Intel)
 
---> ![Download](https://github.com/ORYZAPAO/d88info/releases)
+--> ![Download](https://github.com/ORYZAPAO/d88dmp/releases)
 
 開発はLinux環境メイン（+ MacOS(Intel)、64bit版Windows10）で行っています。  
 他の環境では試していません。
@@ -47,13 +47,13 @@ d88ファイル解析およびRust勉強用として、個人的に作成した�
 ------
 基本的な使い方は、コマンドライン等からD88形式のファイル名を指定するだけ。
 ```
- $ d88info <D88形式のファイル名>
+ $ d88dmp <D88形式のファイル名>
 ```
 
 ## usage 
 ```
 USAGE:
-    d88info [OPTIONS] <*.D88>
+    d88dmp [OPTIONS] <*.D88>
 
 ARGS:
     <*.D88>    D88 Disk Image
@@ -69,9 +69,9 @@ OPTIONS:
 実行例）X1 turbo用のturbo CP/Mでファーマットしたディスクイメージ(CPM_data.d88)を表示  
 
 ```
-$ .\d88info testdata/turboCP_M_formated_disk.d88 
+$ .\d88dmp testdata/turboCP_M_formated_disk.d88 
 ```
-![example](https://github.com/ORYZAPAO/d88info/blob/main/image/d88info_img.png?raw=true)
+![example](https://github.com/ORYZAPAO/d88dmp/blob/main/image/d88dmp_img.png?raw=true)
 
 
 ビルド、コンパイル方法
@@ -80,7 +80,7 @@ $ .\d88info testdata/turboCP_M_formated_disk.d88
 ソースコードからのコンパイルは [Rust](https://www.rust-lang.org) が必要です。  
 GitHub から git clone したあと、ビルド方法は普通にcargoコマンドを叩くだけです。  
 ```
-$ git clone git@github.com:ORYZAPAO/d88info.git
+$ git clone git@github.com:ORYZAPAO/d88dmp.git
 $ cargo build --release
 ```
 （Rustは開発環境の構築が楽チンで良いデスネ。  
