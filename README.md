@@ -5,7 +5,6 @@ d88dmp
 
 [日本語(Japanese)](/README_J.md)
 
-
 Introduction
 -----------
 d88dmp is a report tool that disk image format file * .d88 for retro PC emulators.   
@@ -19,7 +18,6 @@ The Output of d88dmp are shown below.
   + Write Protect
   + Floppy Disk Type(2D/2DD/2HD)
   + Floppy Disk Size(as byte)
-  + Offset of First Track Parameters
 ### Track Table
   + Offset to any Track
 ### Sector Header
