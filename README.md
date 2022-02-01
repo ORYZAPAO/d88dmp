@@ -3,7 +3,8 @@ d88dmp
 ![](https://github.com/ORYZAPAO/d88dmp/workflows/Rust/badge.svg)
 [![CircleCI](https://circleci.com/gh/ORYZAPAO/d88dmp/tree/main.svg?style=svg)](https://circleci.com/gh/ORYZAPAO/d88dmp/tree/main)
 
-[日本語(Japanese)](https://github.com/ORYZAPAO/README_J.md)
+[日本語(Japanese)](/README_J.md)
+
 
 Introduction
 -----------

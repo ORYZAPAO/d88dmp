@@ -3,6 +3,8 @@ d88dmp
 ![](https://github.com/ORYZAPAO/d88dmp/workflows/Rust/badge.svg)
 [![CircleCI](https://circleci.com/gh/ORYZAPAO/d88dmp/tree/main.svg?style=svg)](https://circleci.com/gh/ORYZAPAO/d88dmp/tree/main)
 
+[English](/README.md)
+
 はじめに
 --------
 
