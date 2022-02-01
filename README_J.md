@@ -94,7 +94,7 @@ $ cargo build --release
 
 更新履歴
 ----------
-+ [更新履歴](https://github.com/ORYZAPAO/d88dmp/CHANGELOG.md)
++ [更新履歴](/CHANGELOG.md)
 
 参考情報
 ---------------------

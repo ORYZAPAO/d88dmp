@@ -89,7 +89,7 @@ Licence
 
 Change Log
 ----------
-+ [Change Log](https://github.com/ORYZAPAO/d88dmp/CHANGELOG.md)
++ [Change Log](/CHANGELOG.md)
 
 See also
 ---------------------
