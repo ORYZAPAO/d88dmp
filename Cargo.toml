@@ -9,7 +9,8 @@ keywords = [
          "dump",
          "retropc",
          "pc88",
-         "x1"
+         "x1",
+         "terminal"
 ]
 license = "MIT"
 readme = "README.md"
