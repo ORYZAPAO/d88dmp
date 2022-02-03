@@ -31,15 +31,44 @@ impl ReportD88 {
     ///
     ///   * `buf16` Slice to 16 byte Buffer
     ///   * `offset` Offset at D88 Disk File
+    ///   * `color` Color  
     ///
     /// # Return
     ///
     ///   * Return the value of `offset` plus 16.
     ///
     pub fn print_16byte(&mut self, buf16: &[u8], offset: usize, color: ansi_term::Color) -> usize {
+        self.print_16byte_len(buf16, offset, color, 16)
+    }
+
+    /// Print 16byte (Helper function)
+    ///
+    /// 16byte表示
+    /// D88ファイルのオフセット情報`offset` と 16byte生データ`buf16`から、(length)byteを整形して表示する。  
+    ///
+    /// # Argument
+    ///
+    ///   * `buf16` Slice to 16 byte Buffer
+    ///   * `offset` Offset at D88 Disk File
+    ///   * `color` Color  
+    ///   * `length`
+    ///
+    /// # Return
+    ///
+    ///   * Return the value of `offset` plus 16.
+    ///
+    pub fn print_16byte_len(
+        &mut self,
+        buf16: &[u8],
+        offset: usize,
+        color: ansi_term::Color,
+        length: usize,
+    ) -> usize {
         let mut char_pat = [
             '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.',
         ];
+
+        assert!(length <= 16); // length = 0-16
 
         // Offset Address
         //
@@ -52,7 +81,7 @@ impl ReportD88 {
         // 16 byte
         //
         let mut byte16_str = String::from("");
-        for i in 0..16 {
+        for i in 0..length {
             unsafe {
                 if libc::isprint(buf16[i] as libc::c_int) != 0 {
                     char_pat[i] = buf16[i] as char;
@@ -78,6 +107,6 @@ impl ReportD88 {
 
         //
         //
-        offset + 16
+        offset + length
     }
 }
