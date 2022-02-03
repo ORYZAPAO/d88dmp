@@ -2,7 +2,7 @@
 //                                                   (0x10(セクタヘッダ) + 0x100(セクタデータ))
 
 #[repr(C)]
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 ///  Header Information at D88 File
 ///
 ///  D88ファイルのヘッダ情報
@@ -17,7 +17,7 @@ pub struct D88_Header {
 }
 
 #[repr(C)]
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 ///  Sector Header Information at D88 File
 ///
 ///  D88ファイルのセクタのヘッダ情報
