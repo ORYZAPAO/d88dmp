@@ -26,3 +26,5 @@ libc = "0.2"
 ##clap = "3.0.0-rc.4"
 clap = "3.0.13"
 ansi_term = "0.12.1"
+
+D88FileIO = { path="./crates/D88FileIO", package="D88FileIO" }
