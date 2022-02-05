@@ -2,11 +2,11 @@
 use std::fs;
 use std::io::{BufReader, Read};
 //use std::io::{Seek, SeekFrom};
-use std::mem;
 use ansi_term::Color;
+use std::mem;
 
-use ::D88FileIO::format::{D88_SectorHdr,D88_Header};
 use ::D88FileIO::fileio::D88FileIO;
+use ::D88FileIO::format::{D88_Header, D88_SectorHdr};
 
 /// ReportD88
 ///
@@ -19,10 +19,7 @@ pub struct ReportD88 {
     pub d88fileio: D88FileIO,
 }
 
-
-
 impl ReportD88 {
-
     /// Constructor
     ///
     pub fn new(_cmdline_info: clap::ArgMatches) -> Self {
