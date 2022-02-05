@@ -13,12 +13,13 @@ impl ReportD88 {
             self.print_title_bar();
 
             while ofst < size {
-                for idx in 0..16 {
-                    buf16[idx] = buffer[ofst + idx];
-                }
+                //for idx in 0..16 {
+                //    buf16[idx] = buffer[ofst + idx];
+                //}
+                buf16[..16].clone_from_slice(&buffer[ofst..(16 + ofst)]);
 
                 self.print_16byte(&buf16, ofst, ansi_term::Color::White);
-                println!("");
+                println!();
 
                 ofst += 16;
             }
