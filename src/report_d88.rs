@@ -1,12 +1,12 @@
 /// Report D88 File
 use std::fs;
 use std::io::{BufReader, Read};
-use std::io::{Seek, SeekFrom};
+//use std::io::{Seek, SeekFrom};
 use std::mem;
-
 use ansi_term::Color;
 
-use crate::d88_header::{D88_Header, D88_SectorHdr};
+use ::D88FileIO::format::{D88_SectorHdr,D88_Header};
+use ::D88FileIO::fileio::D88FileIO;
 
 /// ReportD88
 ///
@@ -16,87 +16,25 @@ pub struct ReportD88 {
     cmdline_info: clap::ArgMatches,
     pub noinfo_flg: bool,
     pub nocolor_flg: bool,
-    //pub fh: Option<fs::File>,
+    pub d88fileio: D88FileIO,
 }
 
+
+
 impl ReportD88 {
+
     /// Constructor
     ///
-    pub fn new(cmdline_info: clap::ArgMatches) -> Self {
-        let _noinfo_flg: bool = cmdline_info.is_present("no-info");
-        let _nocolor_flg: bool = cmdline_info.is_present("no-color");
+    pub fn new(_cmdline_info: clap::ArgMatches) -> Self {
+        let _noinfo_flg: bool = _cmdline_info.is_present("no-info");
+        let _nocolor_flg: bool = _cmdline_info.is_present("no-color");
 
         Self {
-            cmdline_info: cmdline_info,
+            cmdline_info: _cmdline_info,
             noinfo_flg: _noinfo_flg,
             nocolor_flg: _nocolor_flg,
+            d88fileio: D88FileIO::new(),
             //fh: None,
-        }
-    }
-
-    /// Read D88 Header (Helper function)
-    ///
-    /// D88ファイルのヘッダ情報を返す
-    ///
-    /// # Argument
-    ///
-    ///   * `reader` BufferReader instance at D88 File
-    ///
-    /// # Return
-    ///
-    ///   * Result<D88_Header, ()>
-    ///
-    pub unsafe fn read_d88_header(
-        &mut self,
-        reader: &mut BufReader<std::fs::File>,
-    ) -> Result<D88_Header, ()> {
-        let mut buf: [u8; mem::size_of::<D88_Header>()] = [0; mem::size_of::<D88_Header>()]; // Header Buffer
-
-        if let Ok(_) = reader.seek(SeekFrom::Start(0)) {
-            if let Ok(read_size) = reader.read(&mut buf) {
-                if read_size != mem::size_of::<D88_Header>() {
-                    return Err(());
-                }
-                Ok(mem::transmute::<
-                    [u8; mem::size_of::<D88_Header>()],
-                    D88_Header,
-                >(buf))
-            } else {
-                Err(())
-            }
-        } else {
-            Err(())
-        }
-    }
-
-    /// Read Sector Header (Helper function)
-    ///
-    /// セクタのヘッダ情報を返す
-    ///
-    /// # Argument
-    ///
-    ///   * `reader` BufferReader instance at D88 File
-    ///
-    /// # Return
-    ///
-    ///   * Result<D88_SectirHdr, ()>
-    ///
-    pub unsafe fn read_sector_header(
-        &mut self,
-        reader: &mut BufReader<std::fs::File>,
-    ) -> Result<D88_SectorHdr, ()> {
-        let mut buf: [u8; mem::size_of::<D88_SectorHdr>()] = [0; mem::size_of::<D88_SectorHdr>()]; // Header Buffer
-
-        if let Ok(read_size) = reader.read(&mut buf) {
-            if read_size != mem::size_of::<D88_SectorHdr>() {
-                return Err(());
-            }
-            Ok(mem::transmute::<
-                [u8; mem::size_of::<D88_SectorHdr>()],
-                D88_SectorHdr,
-            >(buf))
-        } else {
-            Err(())
         }
     }
 
@@ -164,18 +102,13 @@ impl ReportD88 {
     ///
     pub fn report_d88_header(&mut self, reader: &mut BufReader<std::fs::File>) -> usize {
         // Get File Header
-        let header_rslt;
-        unsafe {
-            header_rslt = self.read_d88_header(reader);
-        }
-
-        if let Ok(header) = header_rslt {
+        if let Ok(header) = self.d88fileio.read_d88_header(reader) {
             // Output Track Table
             //
             self.print_track_bar();
             for n in 0..164 {
                 if (n % 8) == 0 {
-                    println!("");
+                    println!();
 
                     if self.nocolor_flg {
                         print!(
@@ -197,8 +130,8 @@ impl ReportD88 {
 
             // Output Data
             //
-            println!("");
-            println!("");
+            println!();
+            println!();
             let byte_img;
             unsafe {
                 byte_img = mem::transmute::<D88_Header, [u8; mem::size_of::<D88_Header>()]>(header);
@@ -256,16 +189,9 @@ impl ReportD88 {
         reader: &mut BufReader<std::fs::File>,
         offset: usize,
     ) -> Result<D88_SectorHdr, &'static str> {
-        // Buffer for D88 Sector Header
-        //
-        let sector_hdr;
-        unsafe {
-            sector_hdr = self.read_sector_header(reader);
-        }
-
         // Sector Header
         //
-        if let Ok(d88_sector_header) = sector_hdr {
+        if let Ok(d88_sector_header) = self.d88fileio.read_sector_header(reader) {
             // Report 16byte Data
             //
             unsafe {
@@ -383,5 +309,13 @@ impl ReportD88 {
         }
 
         0x10 + rdsize // SectorHeader(0x10) + SectorSize
+    }
+}
+
+#[cfg(test)]
+mod test {
+    #[test]
+    fn test_read_d88_header_00() {
+        assert!(true);
     }
 }
