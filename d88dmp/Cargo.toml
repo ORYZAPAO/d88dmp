@@ -28,4 +28,4 @@ libc = "0.2"
 clap = "3.0.13"
 ansi_term = "0.12.1"
 
-D88FileIO = { version="0.0.1", git="https://github.com/ORYZAPAO/d88dmp" }
+D88FileIO = { git="https://github.com/ORYZAPAO/d88dmp" }
