@@ -8,6 +8,6 @@ keywords = [
          "d88","d88dmp"
 ]
 license = "MIT"
-
+description = "d88 File Access Lib."
 
 [dependencies]
