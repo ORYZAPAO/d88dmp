@@ -7,6 +7,11 @@ name = "D88FileIO"
 version = "0.0.1"
 
 [[package]]
+name = "D88FileIO"
+version = "0.0.1"
+source = "git+https://github.com/ORYZAPAO/d88dmp#0b79eff98e9bcd60831294841daf15c6f0025be4"
+
+[[package]]
 name = "ansi_term"
 version = "0.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -57,7 +62,7 @@ dependencies = [
 name = "d88dmp"
 version = "0.0.2"
 dependencies = [
- "D88FileIO",
+ "D88FileIO 0.0.1 (git+https://github.com/ORYZAPAO/d88dmp)",
  "ansi_term",
  "clap",
  "libc",

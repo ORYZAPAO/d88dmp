@@ -15,6 +15,8 @@ keywords = [
 license = "MIT"
 readme = "README.md"
 description = "d88dmp is a command line tool that dumps disk image format * .d88 files for Retro PC emulators."
+
+d88dmp-registry = {index=""}
 ##documentation = 
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -27,4 +29,4 @@ libc = "0.2"
 clap = "3.0.13"
 ansi_term = "0.12.1"
 
-D88FileIO = { version="0.0.1", path="../crates/D88FileIO"  }
+D88FileIO = { version="0.0.1", git="https://github.com/ORYZAPAO/d88dmp" }
