@@ -1,0 +1,6 @@
+[workspace]
+
+members = [
+       "d88dmp",
+       "crates/D88FileIO"
+]
