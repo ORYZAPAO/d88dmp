@@ -309,10 +309,3 @@ impl ReportD88 {
     }
 }
 
-#[cfg(test)]
-mod test {
-    #[test]
-    fn test_read_d88_header_00() {
-        assert!(true);
-    }
-}
