@@ -1,6 +1,6 @@
 更新履歴
 ----------
-+ ver0.0.2 2022.2.6 Renumber revision, Add Commit English README.md, Refactoring
++ ver0.12.5 2022.2.6 Add Commit English README.md, Refactoring
 + ver0.12.4 crates.io に登録 
 + ver0.12.2 220131 d88info -> d88dmp に名前変更。リファクタリング
 + ver0.12a_220116 実行バイナリ登録
