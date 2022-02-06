@@ -2,7 +2,13 @@
 name = "D88FileIO"
 version = "0.0.1"
 edition = "2021"
+authors = ["ORYZAPAO <oryzapao@gmail.com>"]     w
+edition = "2018"
+repository = "https://github.com/ORYZAPAO/d88dmp"
+keywords = [
+         "d88","d88dmp"
+]
+license = "MIT"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
