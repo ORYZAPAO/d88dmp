@@ -4,6 +4,7 @@ d88dmp
 [![CircleCI](https://circleci.com/gh/ORYZAPAO/d88dmp/tree/main.svg?style=svg)](https://circleci.com/gh/ORYZAPAO/d88dmp/tree/main)
 
 [English](/README.md)
+![example](https://github.com/ORYZAPAO/d88dmp/blob/main/image/d88info_img.png?raw=true)
 
 はじめに
 --------
@@ -76,7 +77,6 @@ OPTIONS:
 ```
 $ .\d88dmp testdata/turboCP_M_formated_disk.d88 
 ```
-![example](https://github.com/ORYZAPAO/d88dmp/blob/main/image/d88info_img.png?raw=true)
 
 ビルド、コンパイル方法
 ---------------------

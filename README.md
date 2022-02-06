@@ -4,6 +4,7 @@ d88dmp
 [![CircleCI](https://circleci.com/gh/ORYZAPAO/d88dmp/tree/main.svg?style=svg)](https://circleci.com/gh/ORYZAPAO/d88dmp/tree/main)
 
 [日本語(Japanese)](/README_J.md)
+![example](https://github.com/ORYZAPAO/d88dmp/blob/main/image/d88info_img.png?raw=true)
 
 Introduction
 -----------
@@ -73,8 +74,6 @@ Example) CP/M formated Disk Image(Sharp X1turbo, turbo CP/M)
 ```
 $ .\d88dmp testdata/turboCP_M_formated_disk.d88 
 ```
-![example](https://github.com/ORYZAPAO/d88dmp/blob/main/image/d88info_img.png?raw=true)
-
 
 Build
 ---------------------
