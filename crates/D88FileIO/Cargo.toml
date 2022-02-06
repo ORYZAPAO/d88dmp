@@ -2,7 +2,7 @@
 name = "D88FileIO"
 version = "0.0.1"
 edition = "2021"
-authors = ["ORYZAPAO <oryzapao@gmail.com>"]     w
+authors = ["ORYZAPAO <oryzapao@gmail.com>"]
 edition = "2018"
 repository = "https://github.com/ORYZAPAO/d88dmp"
 keywords = [
