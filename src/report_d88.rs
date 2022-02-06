@@ -1,12 +1,9 @@
-/// Report D88 File
-use std::fs;
-use std::io::{BufReader, Read};
-//use std::io::{Seek, SeekFrom};
 use ansi_term::Color;
+use std::io::Read;
 use std::mem;
 
-use ::D88FileIO::fileio::D88FileIO;
 use ::D88FileIO::format::{D88_Header, D88_SectorHdr};
+use D88FileIO::fileio::D88FileIO;
 
 /// ReportD88
 ///
@@ -31,7 +28,6 @@ impl ReportD88 {
             noinfo_flg: _noinfo_flg,
             nocolor_flg: _nocolor_flg,
             d88fileio: D88FileIO::new(),
-            //fh: None,
         }
     }
 
@@ -41,17 +37,16 @@ impl ReportD88 {
     ///   * (none)
     ///
     pub fn report(&mut self) {
-        if let Some(d88_name) = self.cmdline_info.value_of("*.D88") {
-            if let Ok(fh) = fs::File::open(d88_name) {
-                unsafe {
-                    if self.noinfo_flg {
-                        self.report_d88_noinfo(fh);
-                    } else {
-                        self.report_d88(fh);
-                    }
+        if let Some(d88_path) = self.cmdline_info.value_of("*.D88") {
+            if self.noinfo_flg {
+                if let Ok(fh) = std::fs::File::open(d88_path) {
+                    self.report_d88_noinfo(fh);
                 }
             } else {
-                println!(" Not Found \"{}\"", d88_name);
+                self.d88fileio = D88FileIO::open(d88_path);
+                unsafe {
+                    self.report_d88();
+                }
             }
         }
     }
@@ -67,19 +62,15 @@ impl ReportD88 {
     /// # Return
     ///  * (none)
     ///
-    pub unsafe fn report_d88(&mut self, fh: std::fs::File) {
-        //pub unsafe fn report_d88(&mut self) {
-        let mut reader = BufReader::new(fh);
-
-        let mut rdsize = self.report_d88_header(&mut reader);
+    pub unsafe fn report_d88(&mut self) {
+        let mut rdsize = self.report_d88_header();
         let mut offset = rdsize;
 
-        rdsize = self.report_sector(&mut reader, offset);
+        rdsize = self.report_sector(offset);
         offset += rdsize;
         while rdsize != 0 {
-            rdsize = self.report_sector(&mut reader, offset);
+            rdsize = self.report_sector(offset);
             offset += rdsize;
-            //println!("[DEBUG] -->{:x}",rdsize);
         }
     }
 
@@ -97,9 +88,10 @@ impl ReportD88 {
     ///   * if Success, return D88 Header Size.  
     ///   * if Error, return 0
     ///
-    pub fn report_d88_header(&mut self, reader: &mut BufReader<std::fs::File>) -> usize {
+    pub fn report_d88_header(&mut self) -> usize {
         // Get File Header
-        if let Ok(header) = self.d88fileio.read_d88_header(reader) {
+        //
+        if let Ok(header) = self.d88fileio.read_d88_header() {
             // Output Track Table
             //
             self.print_track_bar();
@@ -181,14 +173,10 @@ impl ReportD88 {
     ///   * if Success, return Ok(`header`)  `header` is D88_SectorHdr instance (Sector Header Info.)
     ///   * if Error, return Err("err")
     ///
-    pub fn report_sector_hdr_dat(
-        &mut self,
-        reader: &mut BufReader<std::fs::File>,
-        offset: usize,
-    ) -> Result<D88_SectorHdr, &'static str> {
+    pub fn report_sector_hdr_dat(&mut self, offset: usize) -> Result<D88_SectorHdr, &'static str> {
         // Sector Header
         //
-        if let Ok(d88_sector_header) = self.d88fileio.read_sector_header(reader) {
+        if let Ok(d88_sector_header) = self.d88fileio.read_sector_header() {
             // Report 16byte Data
             //
             unsafe {
@@ -263,17 +251,13 @@ impl ReportD88 {
     ///   * if Success, return next offset at D88 File
     ///   * if Error, retrun 0
     ///
-    pub unsafe fn report_sector(
-        &mut self,
-        reader: &mut BufReader<std::fs::File>,
-        offset_: usize,
-    ) -> usize {
+    pub unsafe fn report_sector(&mut self, offset_: usize) -> usize {
         let mut offset = offset_;
         let sector_size;
 
         // Read Sector Header
         //
-        if let Ok(d88_sector_header) = self.report_sector_hdr_dat(reader, offset) {
+        if let Ok(d88_sector_header) = self.report_sector_hdr_dat(offset) {
             // Sector Header Info
             offset += 0x10;
             sector_size = d88_sector_header.size_of_data as usize;
@@ -284,28 +268,31 @@ impl ReportD88 {
         // Read Secrtor Data
         //
         let mut sector_buffer = vec![0; sector_size]; // Get Sector Buffer
-        let mut rdsize = reader.read(&mut sector_buffer).unwrap();
-        while rdsize < sector_size {
-            // 中途までしかリードしていなかったら、残りを読む。RustのBufReaderのデフォルトは8KB単位
-            rdsize += reader.read(&mut sector_buffer[rdsize..]).unwrap();
-            //println!("BBB rdsize {}", rdsize);
-        }
 
-        // Print Sector
-        //
-        let mut i: usize = 0;
-        while i < sector_size {
-            self.print_16byte(
-                &sector_buffer[i..(i + 16)],
-                offset,
-                ansi_term::Color::RGB(150, 150, 150),
-            );
-            println!();
-            offset += 0x10;
-            i += 0x10;
-        }
+        if let Some(ref mut reader) = self.d88fileio.reader {
+            let mut rdsize = reader.read(&mut sector_buffer).unwrap();
+            while rdsize < sector_size {
+                // 中途までしかリードしていなかったら、残りを読む。RustのBufReaderのデフォルトは8KB単位
+                rdsize += reader.read(&mut sector_buffer[rdsize..]).unwrap();
+            }
 
-        0x10 + rdsize // SectorHeader(0x10) + SectorSize
+            // Print Sector
+            //
+            let mut i: usize = 0;
+            while i < sector_size {
+                self.print_16byte(
+                    &sector_buffer[i..(i + 16)],
+                    offset,
+                    ansi_term::Color::RGB(150, 150, 150),
+                );
+                println!();
+                offset += 0x10;
+                i += 0x10;
+            }
+
+            0x10 + rdsize // SectorHeader(0x10) + SectorSize
+        } else {
+            0
+        }
     }
 }
-
