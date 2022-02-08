@@ -27,7 +27,7 @@ impl ReportD88 {
             cmdline_info: _cmdline_info,
             noinfo_flg: _noinfo_flg,
             nocolor_flg: _nocolor_flg,
-            d88fileio: D88FileIO::new(),
+            d88fileio: D88FileIO::default(),
         }
     }
 
