@@ -16,8 +16,21 @@ pub struct D88_Header {
     pub track_tbl: [u32; 164],
 }
 
+impl Default for D88_Header {
+    fn default() -> Self {
+        Self {
+            disk_name: [0u8; 17],
+            reserved: [0u8; 9],
+            write_protect: 0u8,
+            disk_type: 0u8,
+            disk_size: 0u32,
+            track_tbl: [0u32; 164],
+        }
+    }
+}
+
 #[repr(C)]
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Default)]
 ///  Sector Header Information at D88 File
 ///
 ///  D88ファイルのセクタのヘッダ情報
