@@ -217,10 +217,7 @@ impl D88FileIO {
 #[cfg(test)]
 mod test {
     use crate::fileio::D88FileIO;
-    use crate::format::{D88_Header, D88_SectorHdr};
-    use std::fs;
-    use std::io::{BufReader, Read};
-    use std::path::Path;
+    //use crate::format::{D88_Header, D88_SectorHdr};
 
     #[test]
     fn test_read_d88_header_disk_name() {
