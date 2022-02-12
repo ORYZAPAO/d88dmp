@@ -10,16 +10,31 @@ use crate::format::{D88_Header, D88_SectorHdr};
 ///
 #[derive(Default)]
 pub struct Sector {
-    pub offset: u32,
+    pub offset: u64,
     pub header: D88_SectorHdr,
 }
 
 ///
 #[derive(Default)]
 pub struct Track {
-    pub offset    : u32,
+    pub offset    : u64,
     pub sector_tbl: Vec<Sector>,
 }
+
+impl Track{
+  pub fn update(&mut self, reader : &mut BufReader<std::fs::File>){
+    if reader.seek(SeekFrom::Start(self.offset)).is_err() {
+      return;
+    }
+
+    let mut sector = Sector::default();;
+    sector.offset = self.offset;
+    
+    //reader.read
+    
+  }
+}
+
 
 ///
 #[derive(Default)]
@@ -54,19 +69,21 @@ impl  Disk{
           }
 
           self.d88_hdr = d88_hdr;
-          self.preset_track_offset();
-          
+          self.update_track_offset();          
         }
         //Err(())
     }
 
-  pub fn preset_track_offset(&mut self){
+  pub fn update_track_offset(&mut self){
     for track_offset in self.d88_hdr.track_tbl {
       let mut track = Track::default();
-      track.offset = track_offset;
+      track.offset = track_offset as u64;
       self.track_tbl.push(track);      
     }
   }
+
+
+
   
 }
 
