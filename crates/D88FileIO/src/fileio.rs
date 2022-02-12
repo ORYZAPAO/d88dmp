@@ -17,14 +17,63 @@ pub struct Sector {
 ///
 #[derive(Default)]
 pub struct Track {
+    pub offset    : u32,
     pub sector_tbl: Vec<Sector>,
 }
 
 ///
 #[derive(Default)]
 pub struct Disk {
+    pub d88_hdr : D88_Header,
     pub track_tbl: Vec<Track>,
 }
+
+impl  Disk{
+    #[allow(dead_code)]
+    pub fn read_d88_header(
+        &mut self,
+        reader: &mut BufReader<std::fs::File>,
+    ){
+        let mut buf: [u8; mem::size_of::<D88_Header>()] = [0; mem::size_of::<D88_Header>()]; // Header Buffer
+
+        if reader.seek(SeekFrom::Start(0)).is_err() {
+          //return Err(());
+        }
+
+        if let Ok(read_size) = reader.read(&mut buf) {
+          //
+          if read_size != mem::size_of::<D88_Header>() {
+            //return Err(());
+          }
+
+          let d88_hdr;
+          unsafe{
+            d88_hdr = mem::transmute::<
+                [u8; mem::size_of::<D88_Header>()],
+                D88_Header>(buf);
+          }
+
+          self.d88_hdr = d88_hdr;
+          self.preset_track_offset();
+          
+        }
+        //Err(())
+    }
+
+  pub fn preset_track_offset(&mut self){
+    for track_offset in self.d88_hdr.track_tbl {
+      let mut track = Track::default();
+      track.offset = track_offset;
+      self.track_tbl.push(track);      
+    }
+  }
+  
+}
+
+
+
+
+
 
 ///
 ///
