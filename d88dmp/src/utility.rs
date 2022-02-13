@@ -37,7 +37,7 @@ impl ReportD88 {
     ///
     ///   * Return the value of `offset` plus 16.
     ///
-    pub fn print_16byte(&mut self, buf16: &[u8], offset: usize, color: ansi_term::Color) -> usize {
+    pub fn print_16byte(&self, buf16: &[u8], offset: usize, color: ansi_term::Color) -> usize {
         self.print_16byte_len(buf16, offset, color, 16)
     }
 
@@ -58,7 +58,7 @@ impl ReportD88 {
     ///   * Return the value of `offset` plus 16.
     ///
     pub fn print_16byte_len(
-        &mut self,
+        &self,
         buf16: &[u8],
         offset: usize,
         color: ansi_term::Color,
