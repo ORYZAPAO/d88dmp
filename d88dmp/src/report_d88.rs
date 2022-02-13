@@ -41,11 +41,15 @@ impl ReportD88 {
             if self.noinfo_flg {
                 if let Ok(fh) = std::fs::File::open(d88_path) {
                     self.report_d88_noinfo(fh);
+                } else {
+                    println!("File Not Found \"{}\"", d88_path);
                 }
             } else {
                 self.d88fileio = D88FileIO::open(d88_path);
-                unsafe {
+                if self.d88fileio.is_open() {
                     self.report_d88();
+                } else {
+                    println!("File Not Found \"{}\"", d88_path);
                 }
             }
         }
@@ -62,7 +66,7 @@ impl ReportD88 {
     /// # Return
     ///  * (none)
     ///
-    pub unsafe fn report_d88(&mut self) {
+    pub fn report_d88(&mut self) {
         let mut rdsize = self.report_d88_header();
         let mut offset = rdsize;
 
@@ -91,73 +95,73 @@ impl ReportD88 {
     pub fn report_d88_header(&mut self) -> usize {
         // Get File Header
         //
-        if let Ok(header) = self.d88fileio.read_d88_header() {
-            // Output Track Table
-            //
-            self.print_track_bar();
-            for n in 0..164 {
-                if (n % 8) == 0 {
-                    println!();
+        let header = &(self.d88fileio.disk.header);
 
-                    if self.nocolor_flg {
-                        print!(
-                            "{}  {:05x} ",
-                            (format!("{0:2x}h {0:3}d", n)),
-                            header.track_tbl[n]
-                        );
-                    } else {
-                        print!(
-                            "{}  {:05x} ",
-                            Color::Cyan.paint(format!("{0:2x}h {0:3}d", n)),
-                            header.track_tbl[n]
-                        );
-                    }
+        // Output Track Table
+        //
+        self.print_track_bar();
+        for n in 0..164 {
+            if (n % 8) == 0 {
+                println!();
+
+                if self.nocolor_flg {
+                    print!(
+                        "{}  {:05x} ",
+                        (format!("{0:2x}h {0:3}d", n)),
+                        header.track_tbl[n]
+                    );
                 } else {
-                    print!("{:05x} ", header.track_tbl[n]);
+                    print!(
+                        "{}  {:05x} ",
+                        Color::Cyan.paint(format!("{0:2x}h {0:3}d", n)),
+                        header.track_tbl[n]
+                    );
                 }
+            } else {
+                print!("{:05x} ", header.track_tbl[n]);
             }
-
-            // Output Data
-            //
-            println!();
-            println!();
-            let byte_img;
-            unsafe {
-                byte_img = mem::transmute::<D88_Header, [u8; mem::size_of::<D88_Header>()]>(header);
-            }
-
-            self.print_title_bar();
-            self.print_16byte(&byte_img, 0x0000, ansi_term::Color::Green);
-
-            let disk_name;
-            unsafe {
-                disk_name = String::from_utf8_unchecked(header.disk_name.to_vec());
-            }
-            print!("Name({}), ", disk_name);
-            print!(
-                "WriteProtect({}), ",
-                match header.write_protect {
-                    0x10 => "Protected",
-                    0x00 => "None",
-                    _ => "!! Illegal !!",
-                }
-            );
-            print!(
-                "Type({} Disk), ",
-                match header.disk_type {
-                    0x00 => "2D",
-                    0x10 => "2DD",
-                    0x20 => "2HD",
-                    _ => "??",
-                }
-            );
-            print!("DiskSize({} byte)", header.disk_size);
-            println!();
-
-            mem::size_of::<D88_Header>()
-        } else {
-            0
         }
+
+        // Output Data
+        //
+        println!();
+        println!();
+        let byte_img;
+        let header_clone = (*header).clone();
+        unsafe {
+            byte_img =
+                mem::transmute::<D88_Header, [u8; mem::size_of::<D88_Header>()]>(header_clone);
+        }
+
+        self.print_title_bar();
+        self.print_16byte(&byte_img, 0x0000, ansi_term::Color::Green);
+
+        let disk_name;
+        unsafe {
+            disk_name = String::from_utf8_unchecked(header.disk_name.to_vec());
+        }
+        print!("Name({}), ", disk_name);
+        print!(
+            "WriteProtect({}), ",
+            match header.write_protect {
+                0x10 => "Protected",
+                0x00 => "None",
+                _ => "!! Illegal !!",
+            }
+        );
+        print!(
+            "Type({} Disk), ",
+            match header.disk_type {
+                0x00 => "2D",
+                0x10 => "2DD",
+                0x20 => "2HD",
+                _ => "??",
+            }
+        );
+        print!("DiskSize({} byte)", header.disk_size);
+        println!();
+
+        mem::size_of::<D88_Header>()
     }
 
     /// Report Header and Data of Sector (Helper function)
@@ -194,10 +198,7 @@ impl ReportD88 {
             );
 
             print!("Size({} byte/sec), ", 128 << (d88_sector_header.sec_size));
-            print!(
-                "NumOfSec({} sec/track), ",
-                d88_sector_header.number_of_sector
-            );
+            print!("NumOfSec({} sec/track), ", d88_sector_header.number_of_sec);
             print!(
                 "Status({}), ",
                 match d88_sector_header.status {
@@ -251,7 +252,7 @@ impl ReportD88 {
     ///   * if Success, return next offset at D88 File
     ///   * if Error, retrun 0
     ///
-    pub unsafe fn report_sector(&mut self, offset_: usize) -> usize {
+    pub fn report_sector(&mut self, offset_: usize) -> usize {
         let mut offset = offset_;
         let sector_size;
 
