@@ -124,7 +124,7 @@ impl Track {
 ///
 #[derive(Default)]
 pub struct Disk {
-    pub d88_hdr: D88_Header,
+    pub header: D88_Header,
     pub track_tbl: Vec<Track>,
 }
 
@@ -153,11 +153,11 @@ impl Disk {
                 return Err(());
             }
 
-            let d88_hdr;
+            let header;
             unsafe {
-                d88_hdr = mem::transmute::<[u8; mem::size_of::<D88_Header>()], D88_Header>(buf);
+                header = mem::transmute::<[u8; mem::size_of::<D88_Header>()], D88_Header>(buf);
             }
-            self.d88_hdr = d88_hdr;
+            self.header = header;
 
             self.preset_track(reader) // return Ok(disk_size :usize)
         } else {
@@ -170,7 +170,7 @@ impl Disk {
         let mut disk_size: usize = 0;
 
         //let mut num_of_track =0;
-        for track_offset in self.d88_hdr.track_tbl {
+        for track_offset in self.header.track_tbl {
             let mut track = Track::default();
 
             if let Ok(track_size) = track.preset(reader, track_offset as u64) {
