@@ -1,6 +1,8 @@
 //348848 = 0x2b0(ヘッダ) + 40(トラック数) x 2(面) x 16(セクタ/トラック) x
 //                                                   (0x10(セクタヘッダ) + 0x100(セクタデータ))
 
+pub const MAX_SECTOR: u16 = 164;
+
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 ///  Header Information at D88 File
@@ -24,7 +26,7 @@ impl Default for D88_Header {
             write_protect: 0u8,
             disk_type: 0u8,
             disk_size: 0u32,
-            track_tbl: [0u32; 164],
+            track_tbl: [0u32; MAX_SECTOR as usize],
         }
     }
 }
@@ -40,7 +42,7 @@ pub struct D88_SectorHdr {
     pub side: u8,     // Side
     pub sec: u8,      // Sector
     pub sec_size: u8, // Sector Size
-    pub number_of_sector: u16,
+    pub number_of_sec: u16,
     pub density: u8,
     pub deleted_mark: u8,
     pub status: u8,

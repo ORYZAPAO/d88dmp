@@ -7,100 +7,19 @@ use std::path::Path;
 
 use crate::format::{D88_Header, D88_SectorHdr};
 
-///
-#[derive(Default)]
-pub struct Sector {
-    pub offset: u64,
-    pub header: D88_SectorHdr,
-}
-
-///
-#[derive(Default)]
-pub struct Track {
-    pub offset    : u64,
-    pub sector_tbl: Vec<Sector>,
-}
-
-impl Track{
-  pub fn update(&mut self, reader : &mut BufReader<std::fs::File>){
-    if reader.seek(SeekFrom::Start(self.offset)).is_err() {
-      return;
-    }
-
-    let mut sector = Sector::default();;
-    sector.offset = self.offset;
-    
-    //reader.read
-    
-  }
-}
-
-
-///
-#[derive(Default)]
-pub struct Disk {
-    pub d88_hdr : D88_Header,
-    pub track_tbl: Vec<Track>,
-}
-
-impl  Disk{
-    #[allow(dead_code)]
-    pub fn read_d88_header(
-        &mut self,
-        reader: &mut BufReader<std::fs::File>,
-    ){
-        let mut buf: [u8; mem::size_of::<D88_Header>()] = [0; mem::size_of::<D88_Header>()]; // Header Buffer
-
-        if reader.seek(SeekFrom::Start(0)).is_err() {
-          //return Err(());
-        }
-
-        if let Ok(read_size) = reader.read(&mut buf) {
-          //
-          if read_size != mem::size_of::<D88_Header>() {
-            //return Err(());
-          }
-
-          let d88_hdr;
-          unsafe{
-            d88_hdr = mem::transmute::<
-                [u8; mem::size_of::<D88_Header>()],
-                D88_Header>(buf);
-          }
-
-          self.d88_hdr = d88_hdr;
-          self.update_track_offset();          
-        }
-        //Err(())
-    }
-
-  pub fn update_track_offset(&mut self){
-    for track_offset in self.d88_hdr.track_tbl {
-      let mut track = Track::default();
-      track.offset = track_offset as u64;
-      self.track_tbl.push(track);      
-    }
-  }
-
-
-
-  
-}
-
-
-
-
-
+use crate::disk::Disk;
 
 ///
 ///
 ///
 #[derive(Default)]
+#[allow(non_snake_case)]
 pub struct D88FileIO {
     pub reader: Option<BufReader<std::fs::File>>,
     pub disk: Disk,
 }
 
+#[allow(non_snake_case)]
 impl D88FileIO {
     /// Constructor
     ///
@@ -132,17 +51,13 @@ impl D88FileIO {
     ///
     ///   * (none)
     ///
-    fn _read_disk_parameter(reader: &mut BufReader<std::fs::File>) -> Result<Disk,()>{
-      let disk = Disk::default();
-
-      /* NONE */
-      if reader.seek(SeekFrom::Start(0)).is_err() {
-        return Err(())
-      }
-
-      
-
-      Ok(disk)
+    fn _read_disk_parameter(reader: &mut BufReader<std::fs::File>) -> Result<Disk, ()> {
+        let mut disk = Disk::default();
+        if let Ok(_) = disk.preset(reader) {
+            Ok(disk)
+        } else {
+            Err(())
+        }
     }
 
     /// D88ファイル指定つきConstructor
@@ -158,28 +73,19 @@ impl D88FileIO {
     ///   * D88FileIO
     ///
     pub fn open<P: AsRef<Path>>(path: P) -> Self {
-        let mut _reader = D88FileIO::_open(path);
-
-        if let Ok(mut reader) = _reader {
-          let disk_ = D88FileIO::_read_disk_parameter(&mut reader);
-
-          Self{
-            reader : Some(reader),
-            disk :{
-              if let Ok(disk) = disk_ {
-                disk
-              }else{
-                Disk::default()
-              }
+        if let Ok(mut reader) = D88FileIO::_open(path) {
+            if let Ok(disk) = D88FileIO::_read_disk_parameter(&mut reader) {
+                return Self {
+                    reader: Some(reader),
+                    disk: disk,
+                };
             }
-          }
-        }else{
-          Self{
-            reader : None,
-            disk :Disk::default(),
-          }
         }
-          
+
+        Self {
+            reader: None,
+            disk: Disk::default(),
+        }
     }
 
     /// Read D88 Header (Helper function)
