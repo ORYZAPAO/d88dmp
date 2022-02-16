@@ -2,6 +2,7 @@ use ansi_term::Color;
 use std::io::Read;
 use std::mem;
 
+use ::D88FileIO::disk::{Disk, Sector, Track};
 use ::D88FileIO::format::{D88_Header, D88_SectorHdr};
 use D88FileIO::fileio::D88FileIO;
 
@@ -66,16 +67,63 @@ impl ReportD88 {
     /// # Return
     ///  * (none)
     ///
-    pub fn report_d88(&mut self) {
-        let mut rdsize = self.report_d88_header();
-        let mut offset = rdsize;
+    pub fn report_d88(&self) {
+        let _ = self.report_d88_header();
 
-        rdsize = self.report_sector(offset);
-        offset += rdsize;
-        while rdsize != 0 {
-            rdsize = self.report_sector(offset);
-            offset += rdsize;
+        for track in self.d88fileio.disk.track_tbl.iter() {
+            self.report_track(track);
         }
+    }
+
+    pub fn report_track(&self, track: &Track) {
+        for sector in track.sector_tbl.iter() {
+            self.print_sector(sector);
+        }
+    }
+
+    pub fn print_sector(&self, sector: &Sector) {
+        // Report Sector Header
+        //
+        print!(
+            "Track({}), Side({}), Sector({}), ",
+            sector.header.track, sector.header.side, sector.header.sec
+        );
+
+        print!("Size({} byte/sec), ", 128 << (sector.header.sec_size));
+        print!("NumOfSec({} sec/track), ", sector.header.number_of_sec);
+        print!(
+            "Status({}), ",
+            match sector.header.status {
+                0x00 => "OK",           // 正常
+                0x10 => "DELETED",      // 削除済みデータ
+                0xa0 => "ID CRC Err",   // ID CRC エラー
+                0xb0 => "Data CRC Err", // データ CRC エラー
+                0xe0 => "No Addr Mark", // アドレスマークなし
+                0xf0 => "No Data Mark", // データマークなし
+                _ => "??",
+            }
+        );
+        print!(
+            "Density({:02x}h), ",
+            //match sector.header.density {
+            //    0x00 => "D",  // 倍密度 // dencityの仕様がよく分からない。
+            //    0x40 => "S",  // 単密度
+            //    0x01 => "HD", // 高密度
+            //    _ => "??",
+            //}
+            sector.header.density
+        );
+        print!(
+            "Mark({}), ",
+            match sector.header.deleted_mark {
+                0x00 => "NORMAL",
+                0x10 => "DELETED",
+                _ => "??",
+            }
+        );
+        print!("DataSize({} byte), ", sector.header.size_of_data);
+
+        println!();
     }
 
     /// Report D88 Header (Helper function)
@@ -92,7 +140,7 @@ impl ReportD88 {
     ///   * if Success, return D88 Header Size.  
     ///   * if Error, return 0
     ///
-    pub fn report_d88_header(&mut self) -> usize {
+    pub fn report_d88_header(&self) -> usize {
         // Get File Header
         //
         let header = &(self.d88fileio.disk.header);
@@ -184,8 +232,10 @@ impl ReportD88 {
             // Report 16byte Data
             //
             unsafe {
+                let d88_sector_header_2 = d88_sector_header.clone();
+
                 let byte_img = mem::transmute::<D88_SectorHdr, [u8; mem::size_of::<D88_SectorHdr>()]>(
-                    d88_sector_header,
+                    d88_sector_header_2,
                 );
                 self.print_16byte(&byte_img, offset, ansi_term::Color::Green);
             }
