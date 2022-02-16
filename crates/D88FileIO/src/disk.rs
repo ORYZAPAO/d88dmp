@@ -84,11 +84,12 @@ impl Track {
     pub fn preset(
         &mut self,
         reader: &mut BufReader<std::fs::File>,
-        offset: u64,
+        offset_: u64,
     ) -> Result<usize, ()> {
-        if offset == 0 {
+        if offset_ == 0 {
             return Err(());
         }
+        let mut offset = offset_;
 
         let mut sec_count: u16 = 0;
         let mut track_size: usize = 0;
@@ -104,16 +105,22 @@ impl Track {
 
                 //  Number of sector as track
                 number_of_sector = sector.header.number_of_sec;
-
+                
                 self.sector_tbl.push(sector);
 
                 sec_count += 1;
                 if (sec_count >= number_of_sector) || (sec_count >= MAX_SECTOR) {
                     break;
                 }
+
+               //
+               offset += sec_size;
             } else {
                 return Err(());
             }
+
+            //
+
         }
 
         self.number_of_sector = number_of_sector;
