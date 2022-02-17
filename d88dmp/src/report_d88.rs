@@ -125,7 +125,7 @@ impl ReportD88 {
             }
         }
 
-        // Output Data
+        // Report File Header (Byte Image)
         //
         println!();
         println!();
@@ -138,6 +138,9 @@ impl ReportD88 {
         self.print_title_bar();
         self.print_16byte(&byte_img, 0x0000 as u64, ansi_term::Color::Green);
 
+
+        // Report File Header
+        //
         let disk_name;
         unsafe {
             disk_name = String::from_utf8_unchecked(header.disk_name.to_vec());
