@@ -130,10 +130,9 @@ impl ReportD88 {
         println!();
         println!();
         let byte_img;
-        let header_clone = (*header).clone();
         unsafe {
             byte_img =
-                mem::transmute::<D88_Header, [u8; mem::size_of::<D88_Header>()]>(header_clone);
+                mem::transmute::<D88_Header, [u8; mem::size_of::<D88_Header>()]>((*header).clone());
         }
 
         self.print_title_bar();
@@ -183,6 +182,8 @@ impl ReportD88 {
     pub fn print_sector(&self, sector: &Sector) {
         let byte_img;
 
+        // Report Sector Header (Byte Image)
+        //
         unsafe {
             byte_img = mem::transmute::<D88_SectorHdr, [u8; mem::size_of::<D88_SectorHdr>()]>(
                 sector.header.clone(),
