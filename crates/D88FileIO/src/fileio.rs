@@ -5,7 +5,7 @@ use std::mem;
 /// Report D88 File
 use std::path::Path;
 
-use crate::format::{D88_Header, D88_SectorHdr};
+use crate::format::D88_Header;
 
 use crate::disk::Disk;
 
@@ -142,41 +142,6 @@ impl D88FileIO {
             }
         }
 
-        Err(())
-    }
-
-    /// Read Sector Header (Helper function)
-    ///
-    /// セクタのヘッダ情報を返す
-    ///
-    /// # Argument
-    ///
-    ///   * `reader` BufferReader instance at D88 File
-    ///
-    /// # Return
-    ///
-    ///   * Result<D88_SectirHdr, ()>
-    ///
-    #[allow(dead_code)]
-    pub fn read_sector_header(
-        &mut self,
-        //reader: &mut BufReader<std::fs::File>,
-    ) -> Result<D88_SectorHdr, ()> {
-        let mut buf: [u8; mem::size_of::<D88_SectorHdr>()] = [0; mem::size_of::<D88_SectorHdr>()]; // Header Buffer
-
-        if let Some(ref mut reader) = self.reader {
-            if let Ok(read_size) = reader.read(&mut buf) {
-                if read_size != mem::size_of::<D88_SectorHdr>() {
-                    return Err(());
-                }
-                unsafe {
-                    return Ok(mem::transmute::<
-                        [u8; mem::size_of::<D88_SectorHdr>()],
-                        D88_SectorHdr,
-                    >(buf));
-                }
-            }
-        }
         Err(())
     }
 } //

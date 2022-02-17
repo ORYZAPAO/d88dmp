@@ -47,7 +47,6 @@ impl Sector {
                 d88_sector_header =
                     mem::transmute::<[u8; mem::size_of::<D88_SectorHdr>()], D88_SectorHdr>(buf);
             }
-            println!("{:?}", d88_sector_header);
 
             let ret_sector_size =
                 mem::size_of::<D88_SectorHdr>() + ((128 << d88_sector_header.sec_size) as usize);
