@@ -42,7 +42,7 @@ impl Sector {
             if read_size != mem::size_of::<D88_SectorHdr>() {
                 return Err(());
             }
-            
+
             let d88_sector_header;
             unsafe {
                 d88_sector_header =
@@ -53,7 +53,7 @@ impl Sector {
             let ret_sector_size =
                 mem::size_of::<D88_SectorHdr>() + ((128 << d88_sector_header.sec_size) as usize);
 
-            // 
+            //
             let mut sector_data: Vec<u8> = vec![0; d88_sector_header.size_of_data.into()];
             if reader.seek(SeekFrom::Start(sector_offset)).is_err() {
                 return Err(());
@@ -62,7 +62,7 @@ impl Sector {
                 return Err(());
             }
 
-            // 
+            //
             self.offset = sector_offset;
             self.header = d88_sector_header;
             self.data = sector_data;
