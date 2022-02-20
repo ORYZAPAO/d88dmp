@@ -72,7 +72,13 @@ impl D88FileIO {
     ///
     /// # Example
     ///
+    ///  use D88FileIO::fileio::D88FileIO;
+    ///  use D88FileIO::disk::{Sector, Track};
+    ///  use D88FileIO::format::{D88_SectorHdr};
+    ///
     ///  let d88fileio = D88FileIO::open("./ABC.d88");
+    ///
+    ///  println!("{:?}", d88fileio.disk.header);
     ///
     ///  for track in self.d88fileio.disk.track_tbl.iter() {
     ///    for sector in track.sector_tbl.iter(){
