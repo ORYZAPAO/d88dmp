@@ -1,5 +1,4 @@
 use ansi_term::Color;
-use std::io::Read;
 use std::mem;
 
 use ::D88FileIO::disk::{Sector, Track};
@@ -77,8 +76,12 @@ impl ReportD88 {
 
     pub fn report_track(&self, track: &Track) {
         for sector in track.sector_tbl.iter() {
-            self.print_sector(sector);
+            self.report_sector(sector);
         }
+    }
+
+    pub fn report_sector(&self, sector: &Sector) {
+        self.print_sector(sector);
     }
 
     /// Report D88 Header (Helper function)
@@ -137,7 +140,6 @@ impl ReportD88 {
 
         self.print_title_bar();
         self.print_16byte(&byte_img, 0x0000 as u64, ansi_term::Color::Green);
-
 
         // Report File Header
         //
@@ -198,7 +200,7 @@ impl ReportD88 {
             ansi_term::Color::Green,
         );
 
-        // Report Sector Header
+        // Print Sector Header
         //
         print!(
             "Track({}), Side({}), Sector({}), ",
@@ -240,144 +242,19 @@ impl ReportD88 {
         print!("DataSize({} byte), ", sector.header.size_of_data);
 
         println!();
+
+        // Print Sector Raw Data
+        //
+        let mut ct = sector.header.size_of_data;
+        let mut offset = sector.offset;
+        let mut pt = 0;
+        while ct > 0 {
+            let aa = &sector.data[pt..pt + 16];
+            self.print_16byte(aa, offset, ansi_term::Color::White);
+            println!();
+            offset += 16;
+            pt += 16;
+            ct -= 16;
+        }
     }
-
-    /*
-      /// Report Header and Data of Sector (Helper function)
-        ///
-        /// `report_d88` から呼び出される内部関数。
-        /// セクタのヘッダ情報とデータを表示する。
-        ///
-        /// # Arguments
-        ///   * `reader` BufferReader instance at D88 File
-        ///   * `offset` Offset to a Sector at D88 Disk File
-        ///
-        /// # Return
-        ///   * if Success, return Ok(`header`)  `header` is D88_SectorHdr instance (Sector Header Info.)
-        ///   * if Error, return Err("err")
-        ///
-        pub fn report_sector_hdr_dat(&mut self, offset: usize) -> Result<D88_SectorHdr, &'static str> {
-            // Sector Header
-            //
-            if let Ok(d88_sector_header) = self.d88fileio.read_sector_header() {
-                // Report 16byte Data
-                //
-                unsafe {
-                    let d88_sector_header_2 = d88_sector_header.clone();
-
-                    let byte_img = mem::transmute::<D88_SectorHdr, [u8; mem::size_of::<D88_SectorHdr>()]>(
-                        d88_sector_header_2,
-                    );
-                    self.print_16byte(&byte_img, offset, ansi_term::Color::Green);
-                }
-
-                // Report Sector Header
-                //
-                print!(
-                    "Track({}), Side({}), Sector({}), ",
-                    d88_sector_header.track, d88_sector_header.side, d88_sector_header.sec
-                );
-
-                print!("Size({} byte/sec), ", 128 << (d88_sector_header.sec_size));
-                print!("NumOfSec({} sec/track), ", d88_sector_header.number_of_sec);
-                print!(
-                    "Status({}), ",
-                    match d88_sector_header.status {
-                        0x00 => "OK",           // 正常
-                        0x10 => "DELETED",      // 削除済みデータ
-                        0xa0 => "ID CRC Err",   // ID CRC エラー
-                        0xb0 => "Data CRC Err", // データ CRC エラー
-                        0xe0 => "No Addr Mark", // アドレスマークなし
-                        0xf0 => "No Data Mark", // データマークなし
-                        _ => "??",
-                    }
-                );
-                print!(
-                    "Density({:02x}h), ",
-                    //match d88_sector_header.density {
-                    //    0x00 => "D",  // 倍密度 // dencityの仕様がよく分からない。
-                    //    0x40 => "S",  // 単密度
-                    //    0x01 => "HD", // 高密度
-                    //    _ => "??",
-                    //}
-                    d88_sector_header.density
-                );
-                print!(
-                    "Mark({}), ",
-                    match d88_sector_header.deleted_mark {
-                        0x00 => "NORMAL",
-                        0x10 => "DELETED",
-                        _ => "??",
-                    }
-                );
-                print!("DataSize({} byte), ", d88_sector_header.size_of_data);
-
-                println!();
-
-                Ok(d88_sector_header) // [u8;16] --> D88_SectorHdr
-            } else {
-                Err("err")
-            }
-        }
-    */
-
-    /*
-      /// Report Sector (Helper function)
-        ///
-        /// `report_d88` から呼び出される内部関数。
-        /// セクタを表示する。
-        ///
-        /// # Arguments
-        ///   * `reader` BufferReader instance at D88 File
-        ///   * `offset_` Offset to a Sector at D88 Disk File
-        ///
-        /// # Return
-        ///   * if Success, return next offset at D88 File
-        ///   * if Error, retrun 0
-        ///
-      pub fn report_sector(&mut self, offset_: usize) -> usize {
-            let mut offset = offset_;
-            let sector_size;
-
-            // Read Sector Header
-            //
-            if let Ok(d88_sector_header) = self.report_sector_hdr_dat(offset) {
-                // Sector Header Info
-                offset += 0x10;
-                sector_size = d88_sector_header.size_of_data as usize;
-            } else {
-                return 0;
-            }
-
-            // Read Secrtor Data
-            //
-            let mut sector_buffer = vec![0; sector_size]; // Get Sector Buffer
-
-            if let Some(ref mut reader) = self.d88fileio.reader {
-                let mut rdsize = reader.read(&mut sector_buffer).unwrap();
-                while rdsize < sector_size {
-                    // 中途までしかリードしていなかったら、残りを読む。RustのBufReaderのデフォルトは8KB単位
-                    rdsize += reader.read(&mut sector_buffer[rdsize..]).unwrap();
-                }
-
-                // Print Sector
-                //
-                let mut i: usize = 0;
-                while i < sector_size {
-                    self.print_16byte(
-                        &sector_buffer[i..(i + 16)],
-                        offset,
-                        ansi_term::Color::RGB(150, 150, 150),
-                    );
-                    println!();
-                    offset += 0x10;
-                    i += 0x10;
-                }
-
-                0x10 + rdsize // SectorHeader(0x10) + SectorSize
-            } else {
-                0
-            }
-        }
-    */
 }

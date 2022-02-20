@@ -23,8 +23,6 @@ pub struct D88FileIO {
 impl D88FileIO {
     /// Constructor
     ///
-    /// Constructor
-    ///
     /// # Argument
     ///
     ///   * (none)
@@ -60,7 +58,7 @@ impl D88FileIO {
         }
     }
 
-    /// D88ファイル指定つきConstructor
+    /// Constructor with D88 ファイルオープン
     ///
     /// Constructor with *.d88 File Open
     ///

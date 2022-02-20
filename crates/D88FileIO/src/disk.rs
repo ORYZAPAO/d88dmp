@@ -9,6 +9,7 @@ use crate::format::{D88_Header, D88_SectorHdr, MAX_SECTOR};
 pub struct Sector {
     pub offset: u64,
     pub header: D88_SectorHdr,
+    pub data: Vec<u8>,
 }
 
 impl Sector {
@@ -41,18 +42,30 @@ impl Sector {
             if read_size != mem::size_of::<D88_SectorHdr>() {
                 return Err(());
             }
-
+            
             let d88_sector_header;
             unsafe {
                 d88_sector_header =
                     mem::transmute::<[u8; mem::size_of::<D88_SectorHdr>()], D88_SectorHdr>(buf);
             }
+            let sector_offset = offset + mem::size_of::<D88_SectorHdr>() as u64;
 
             let ret_sector_size =
                 mem::size_of::<D88_SectorHdr>() + ((128 << d88_sector_header.sec_size) as usize);
 
-            self.offset = offset + mem::size_of::<D88_SectorHdr>() as u64;
+            // 
+            let mut sector_data: Vec<u8> = vec![0; d88_sector_header.size_of_data.into()];
+            if reader.seek(SeekFrom::Start(sector_offset)).is_err() {
+                return Err(());
+            }
+            if let Err(_) = reader.read(&mut sector_data) {
+                return Err(());
+            }
+
+            // 
+            self.offset = sector_offset;
             self.header = d88_sector_header;
+            self.data = sector_data;
 
             return Ok(ret_sector_size as u64);
         } else {
@@ -172,6 +185,17 @@ impl Disk {
         //
     }
 
+    /// Read Track and Sector
+    ///
+    /// # Argument
+    ///
+    ///   * `reader` &mut BufReader<std::fs::File>
+    ///
+    /// # Return
+    ///
+    ///   * Ok(usize)  Disk Size
+    ///   * Err(())    
+    ///
     pub fn preset_track(&mut self, reader: &mut BufReader<std::fs::File>) -> Result<usize, ()> {
         let mut disk_size: usize = 0;
 
