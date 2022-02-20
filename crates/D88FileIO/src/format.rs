@@ -5,7 +5,7 @@ pub const MAX_SECTOR: u16 = 164;
 
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
-///  Header Information at D88 File
+///  File Header at D88 File
 ///
 ///  D88ファイルのヘッダ情報
 ///
@@ -33,7 +33,7 @@ impl Default for D88_Header {
 
 #[repr(C)]
 #[derive(Debug, Clone, Copy, Default)]
-///  Sector Header Information at D88 File
+///  Sector Header at D88 File
 ///
 ///  D88ファイルのセクタのヘッダ情報
 ///
