@@ -4,7 +4,7 @@ version = 3
 
 [[package]]
 name = "D88FileIO"
-version = "0.0.1"
+version = "0.0.2"
 
 [[package]]
 name = "ansi_term"
@@ -55,7 +55,7 @@ dependencies = [
 
 [[package]]
 name = "d88dmp"
-version = "0.12.5"
+version = "0.12.6"
 dependencies = [
  "D88FileIO",
  "ansi_term",

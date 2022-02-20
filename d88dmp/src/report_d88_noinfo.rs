@@ -18,7 +18,7 @@ impl ReportD88 {
                 //}
                 buf16[..16].clone_from_slice(&buffer[ofst..(16 + ofst)]);
 
-                self.print_16byte(&buf16, ofst, ansi_term::Color::White);
+                self.print_16byte(&buf16, ofst as u64, ansi_term::Color::White);
                 println!();
 
                 ofst += 16;
