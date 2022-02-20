@@ -70,6 +70,17 @@ impl D88FileIO {
     ///
     ///   * D88FileIO
     ///
+    /// # Example
+    ///
+    ///  let d88fileio = D88FileIO::open("./ABC.d88");
+    ///
+    ///  for track in self.d88fileio.disk.track_tbl.iter() {
+    ///    for sector in track.sector_tbl.iter(){
+    ///      println!("{:?}", sector.header);
+    ///      println!("{:?}", sector.data);
+    ///    }
+    ///  }
+    ///
     pub fn open<P: AsRef<Path>>(path: P) -> Self {
         if let Ok(mut reader) = D88FileIO::_open(path) {
             if let Ok(disk) = D88FileIO::_read_disk_parameter(&mut reader) {
