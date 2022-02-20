@@ -21,4 +21,4 @@ libc = "0.2"
 clap = "3.0.13"
 ansi_term = "0.12.1"
 
-D88FileIO = { version="0.0.3", path="../crates/D88FileIO" }
+D88FileIO = { version="0.0.4", path="../crates/D88FileIO" }
