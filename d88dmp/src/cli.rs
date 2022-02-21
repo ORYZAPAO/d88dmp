@@ -17,7 +17,7 @@ pub fn get_cmdline_param() -> ArgMatches {
     let match1 = App::new(TOOL_NAME)
         .version(TOOL_VERSION)
         .author(AUTHOR)
-        .about("D88 Disk Image Reporter.")
+        .about("D88 Disk Image Dump.")
         .arg(
             //
             Arg::new("*.D88")
