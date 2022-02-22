@@ -53,7 +53,6 @@ impl Sector {
             let ret_sector_size =
                 mem::size_of::<D88_SectorHdr>() + ((128 << d88_sector_header.sec_size) as usize);
 
-            //
             let mut sector_data: Vec<u8> = vec![0; d88_sector_header.size_of_data.into()];
             if reader.seek(SeekFrom::Start(sector_offset)).is_err() {
                 return Err(());
@@ -115,7 +114,6 @@ impl Track {
             if let Ok(sec_size) = sector.preset(reader, offset) {
                 track_size += sec_size as usize;
 
-                //  Number of sector as track
                 number_of_sector = sector.header.number_of_sec;
 
                 self.sector_tbl.push(sector);
@@ -131,12 +129,10 @@ impl Track {
                 return Err(());
             }
 
-            //
         }
 
         self.number_of_sector = number_of_sector;
         Ok(track_size)
-        //
     }
 }
 
@@ -199,13 +195,11 @@ impl Disk {
     pub fn preset_track(&mut self, reader: &mut BufReader<std::fs::File>) -> Result<usize, ()> {
         let mut disk_size: usize = 0;
 
-        //let mut num_of_track =0;
         for track_offset in self.header.track_tbl {
             let mut track = Track::default();
 
             if let Ok(track_size) = track.preset(reader, track_offset as u64) {
                 disk_size += track_size as usize;
-                //num_of_track += 1;
             } else {
                 break;
             }
