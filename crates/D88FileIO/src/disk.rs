@@ -128,14 +128,42 @@ impl Track {
             } else {
                 return Err(());
             }
-
         }
 
-        // Sort Sector Table
-        self.sector_tbl.sort_by(|a: &Sector, b: &Sector| { a.header.sector.cmp(&b.header.sector) });
-      
         self.number_of_sector = number_of_sector;
         Ok(track_size)
+    }
+
+    /// Sector Table Sort by Sector Order
+    ///
+    /// # Argument
+    ///
+    ///   * (none)
+    ///
+    /// # Return
+    ///
+    ///   * (none)
+    ///
+    pub fn sector_sort(&mut self) {
+        // Sort Sector Table
+        self.sector_tbl
+            .sort_by(|a: &Sector, b: &Sector| a.header.sector.cmp(&b.header.sector));
+    }
+
+    /// Sector Table Sort by File Offset Order
+    ///
+    /// # Argument
+    ///
+    ///   * (none)
+    ///
+    /// # Return
+    ///
+    ///   * (none)
+    ///
+    pub fn file_offset_sort(&mut self) {
+        // Sort Sector Table
+        self.sector_tbl
+            .sort_by(|a: &Sector, b: &Sector| a.offset.cmp(&b.offset));
     }
 }
 
