@@ -7,7 +7,7 @@ use std::path::Path;
 
 use crate::format::D88_Header;
 
-use crate::disk::Disk;
+use crate::disk::{Disk, Sector};
 
 ///
 ///
@@ -158,6 +158,62 @@ impl D88FileIO {
         }
 
         Err(())
+    }
+
+    /// Sort by Sector Order
+    ///
+    /// # Argument
+    ///
+    ///   * (none)
+    ///
+    /// # Return
+    ///
+    ///   * (none)
+    ///
+    pub fn sector_sort(&mut self) {
+        for track in self.disk.track_tbl.iter_mut() {
+            track.sector_sort();
+        }
+    }
+
+    /// Sort by File Offset Order
+    ///
+    /// # Argument
+    ///
+    ///   * (none)
+    ///
+    /// # Return
+    ///
+    ///   * (none)
+    ///
+    pub fn file_offset_sort(&mut self) {
+        for track in self.disk.track_tbl.iter_mut() {
+            track.file_offset_sort();
+        }
+    }
+
+    /// Get Sector
+    ///
+    /// # Argument
+    ///
+    ///   * `track`  Track  Number (0 Start)
+    ///   * `side`   Side   Number (0 Start)
+    ///   * `sector` Sector Number (0 Start)
+    ///
+    /// # Return
+    ///
+    ///   * Ok(&Sector)
+    ///   * Err(())
+    ///
+    pub fn get_sector(&self, track: usize, side: usize, sector: usize) -> Result<&Sector, ()> {
+        if (track >= self.disk.track_tbl.len())
+            || (side >= 2)
+            || (sector >= self.disk.track_tbl[(track * 2) + side].sector_tbl.len())
+        {
+            return Err(());
+        }
+
+        Ok(&self.disk.track_tbl[(track * 2) + side].sector_tbl[sector])
     }
 } //
 
