@@ -204,10 +204,10 @@ impl ReportD88 {
         //
         print!(
             "Track({}), Side({}), Sector({}), ",
-            sector.header.track, sector.header.side, sector.header.sec
+            sector.header.track, sector.header.side, sector.header.sector
         );
 
-        print!("Size({} byte/sec), ", 128 << (sector.header.sec_size));
+        print!("Size({} byte/sec), ", 128 << (sector.header.sector_size));
         print!("NumOfSec({} sec/track), ", sector.header.number_of_sec);
         print!(
             "Status({}), ",

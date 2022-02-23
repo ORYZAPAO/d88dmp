@@ -32,7 +32,7 @@ impl Default for D88_Header {
 }
 
 #[repr(C)]
-#[derive(Debug, Clone, Copy, Default)]
+#[derive(Debug, Clone, Copy, Default, Eq, Ord, PartialEq, PartialOrd)]
 ///  Sector Header at D88 File
 ///
 ///  D88ファイルのセクタのヘッダ情報
@@ -40,8 +40,8 @@ impl Default for D88_Header {
 pub struct D88_SectorHdr {
     pub track: u8,    // Track
     pub side: u8,     // Side
-    pub sec: u8,      // Sector
-    pub sec_size: u8, // Sector Size
+    pub sector: u8,      // Sector
+    pub sector_size: u8, // Sector Size
     pub number_of_sec: u16,
     pub density: u8,
     pub deleted_mark: u8,
