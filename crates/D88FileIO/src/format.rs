@@ -38,8 +38,8 @@ impl Default for D88_Header {
 ///  D88ファイルのセクタのヘッダ情報
 ///
 pub struct D88_SectorHdr {
-    pub track: u8,    // Track
-    pub side: u8,     // Side
+    pub track: u8,       // Track
+    pub side: u8,        // Side
     pub sector: u8,      // Sector
     pub sector_size: u8, // Sector Size
     pub number_of_sec: u16,
