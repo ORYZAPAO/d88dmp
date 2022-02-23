@@ -58,6 +58,7 @@ cargo install d88dmp
 
 ## usage 
 ```
+
 USAGE:
     d88dmp [OPTIONS] <*.D88>
 
@@ -68,6 +69,7 @@ OPTIONS:
     -h, --help       ヘルプメッセージを表示
     -n, --no-info    ディスクやセクタのヘッダ情報を表示しない
         --no-color   カラー表示の無効化
+        --sector     セクタ番号順に表示
     -V, --version    バージョン情報を表示
 
 ```

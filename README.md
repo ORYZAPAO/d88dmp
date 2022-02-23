@@ -55,6 +55,10 @@ How to Use
 
 ## usage 
 ```
+d88dmp ver 0.13.0
+ORYZA (https://github.com/ORYZAPAO)
+D88 Disk Image Dump.
+
 USAGE:
     d88dmp [OPTIONS] <*.D88>
 
@@ -62,11 +66,11 @@ ARGS:
     <*.D88>    D88 Disk Image
 
 OPTIONS:
-    -h, --help       Show help message 
-    -n, --no-info    No detail Info.
-        --no-color   Disable color
-    -V, --version    Version info.
-
+    -h, --help        Print help information
+    -n, --no-info     No information
+        --no-color    No Color
+        --sector      Sort by Disk Sector Order
+    -V, --version     Print version information
 ```
 
 Example) CP/M formated Disk Image(Sharp X1turbo, turbo CP/M)
