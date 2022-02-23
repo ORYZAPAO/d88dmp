@@ -16,7 +16,7 @@ description = "Dump tool for disk image D88 format."
 
 ##documentation = 
 
-[dependencies]a
+[dependencies]
 libc = "0.2"
 clap = "3.0.13"
 ansi_term = "0.12.1"
