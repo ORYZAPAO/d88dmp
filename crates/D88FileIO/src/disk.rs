@@ -51,7 +51,7 @@ impl Sector {
             let sector_offset = offset + mem::size_of::<D88_SectorHdr>() as u64;
 
             let ret_sector_size =
-                mem::size_of::<D88_SectorHdr>() + ((128 << d88_sector_header.sec_size) as usize);
+                mem::size_of::<D88_SectorHdr>() + ((128 << d88_sector_header.sector_size) as usize);
 
             let mut sector_data: Vec<u8> = vec![0; d88_sector_header.size_of_data.into()];
             if reader.seek(SeekFrom::Start(sector_offset)).is_err() {
@@ -131,6 +131,9 @@ impl Track {
 
         }
 
+        // Sort Sector Table
+        self.sector_tbl.sort_by(|a: &Sector, b: &Sector| { a.header.sector.cmp(&b.header.sector) });
+      
         self.number_of_sector = number_of_sector;
         Ok(track_size)
     }
