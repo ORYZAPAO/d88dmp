@@ -1,6 +1,6 @@
 [package]
 name = "d88dmp"
-version = "0.12.6"
+version = "0.13.0"
 authors = ["ORYZAPAO <oryzapao@gmail.com>"]
 edition = "2018"
 repository = "https://github.com/ORYZAPAO/d88dmp"
@@ -16,7 +16,7 @@ description = "Dump tool for disk image D88 format."
 
 ##documentation = 
 
-[dependencies]
+[dependencies]a
 libc = "0.2"
 clap = "3.0.13"
 ansi_term = "0.12.1"
