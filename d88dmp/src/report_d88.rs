@@ -13,6 +13,7 @@ pub struct ReportD88 {
     cmdline_info: clap::ArgMatches,
     pub noinfo_flg: bool,
     pub nocolor_flg: bool,
+    pub sort_by_sector: bool,
     pub d88fileio: D88FileIO,
 }
 
@@ -22,11 +23,13 @@ impl ReportD88 {
     pub fn new(_cmdline_info: clap::ArgMatches) -> Self {
         let _noinfo_flg: bool = _cmdline_info.is_present("no-info");
         let _nocolor_flg: bool = _cmdline_info.is_present("no-color");
+        let _sort_by_sector: bool = _cmdline_info.is_present("Sort by Sector Order");
 
         Self {
             cmdline_info: _cmdline_info,
             noinfo_flg: _noinfo_flg,
             nocolor_flg: _nocolor_flg,
+            sort_by_sector: _sort_by_sector,
             d88fileio: D88FileIO::default(),
         }
     }
@@ -47,6 +50,12 @@ impl ReportD88 {
             } else {
                 self.d88fileio = D88FileIO::open(d88_path);
                 if self.d88fileio.is_open() {
+                    //
+                    if self.sort_by_sector {
+                        self.d88fileio.sector_sort();
+                    }
+
+                    //
                     self.report_d88();
                 } else {
                     println!("File Not Found \"{}\"", d88_path);
