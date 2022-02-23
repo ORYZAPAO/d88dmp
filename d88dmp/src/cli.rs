@@ -39,6 +39,13 @@ pub fn get_cmdline_param() -> ArgMatches {
                 //.short('n')
                 .long("no-color"),
         )
+        .arg(
+            // "-s, --sector"  No Color
+            Arg::new("Sort by Sector Order")
+                .help("Sort by Disk Sector Order")
+                //.short('s')
+                .long("sector"),
+        )
         .get_matches();
 
     match1
