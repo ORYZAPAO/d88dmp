@@ -51,7 +51,7 @@ impl D88FileIO {
     ///
     fn _read_disk_parameter(reader: &mut BufReader<std::fs::File>) -> Result<Disk, ()> {
         let mut disk = Disk::default();
-        if let Ok(_) = disk.preset(reader) {
+        if disk.preset(reader).is_ok() {
             Ok(disk)
         } else {
             Err(())
@@ -89,10 +89,10 @@ impl D88FileIO {
     ///
     pub fn open<P: AsRef<Path>>(path: P) -> Self {
         if let Ok(mut reader) = D88FileIO::_open(path) {
-            if let Ok(disk) = D88FileIO::_read_disk_parameter(&mut reader) {
+            if let Ok(disk_) = D88FileIO::_read_disk_parameter(&mut reader) {
                 return Self {
                     reader: Some(reader),
-                    disk: disk,
+                    disk: disk_,
                 };
             }
         }
@@ -117,7 +117,7 @@ impl D88FileIO {
     ///   * `false`: File Not Open
     ///
     pub fn is_open(&self) -> bool {
-        !self.reader.is_none()
+        self.reader.is_some()
     }
 
     /// Read D88 Header (Helper function)
@@ -132,7 +132,7 @@ impl D88FileIO {
     ///
     ///   * Result<D88_Header, ()>
     ///
-    #[allow(dead_code)]
+    #[allow(clippy::result_unit_err)]
     pub fn read_d88_header(
         &mut self,
         //reader: &mut BufReader<std::fs::File>,
@@ -205,6 +205,7 @@ impl D88FileIO {
     ///   * Ok(&Sector)
     ///   * Err(())
     ///
+    #[allow(clippy::result_unit_err)]
     pub fn get_sector(&self, track: usize, side: usize, sector: usize) -> Result<&Sector, ()> {
         if (track >= self.disk.track_tbl.len())
             || (side >= 2)

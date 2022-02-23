@@ -57,6 +57,7 @@ impl ReportD88 {
     ///
     ///   * Return the value of `offset` plus 16.
     ///
+    #[allow(clippy::format_in_format_args)]
     pub fn print_16byte_len(
         &self,
         buf16: &[u8],
@@ -75,6 +76,7 @@ impl ReportD88 {
         if !self.nocolor_flg {
             print!("{}  ", Color::Cyan.paint(&(format!("{:05x}", offset))));
         } else {
+            //#[allow(clippy::format_in_format_args)]
             print!("{}  ", format!("{:05x}", offset));
         }
 

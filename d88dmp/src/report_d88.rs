@@ -107,6 +107,7 @@ impl ReportD88 {
     ///   * if Success, return D88 Header Size.  
     ///   * if Error, return 0
     ///
+    #[allow(clippy::format_in_format_args)]
     pub fn report_d88_header(&self) -> usize {
         // Get File Header
         //
@@ -142,13 +143,14 @@ impl ReportD88 {
         println!();
         println!();
         let byte_img;
+        #[allow(clippy::clone_on_copy)]
         unsafe {
             byte_img =
                 mem::transmute::<D88_Header, [u8; mem::size_of::<D88_Header>()]>((*header).clone());
         }
 
         self.print_title_bar();
-        self.print_16byte(&byte_img, 0x0000 as u64, ansi_term::Color::Green);
+        self.print_16byte(&byte_img, 0x0000_u64, ansi_term::Color::Green);
 
         // Report File Header
         //
@@ -198,6 +200,7 @@ impl ReportD88 {
 
         // Report Sector Header (Byte Image)
         //
+        #[allow(clippy::clone_on_copy)]
         unsafe {
             byte_img = mem::transmute::<D88_SectorHdr, [u8; mem::size_of::<D88_SectorHdr>()]>(
                 sector.header.clone(),

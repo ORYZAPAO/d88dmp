@@ -11,7 +11,6 @@ pub struct Sector {
     pub header: D88_SectorHdr,
     pub data: Vec<u8>,
 }
-
 impl Sector {
     /// Read Sector
     ///
@@ -24,6 +23,7 @@ impl Sector {
     ///   * Ok(usize)  Sector Data Size (with Sector Header)
     ///   * Err(())    
     ///
+    #[allow(clippy::result_unit_err)]
     pub fn preset(
         &mut self,
         reader: &mut BufReader<std::fs::File>,
@@ -57,7 +57,7 @@ impl Sector {
             if reader.seek(SeekFrom::Start(sector_offset)).is_err() {
                 return Err(());
             }
-            if let Err(_) = reader.read(&mut sector_data) {
+            if reader.read(&mut sector_data).is_err() {
                 return Err(());
             }
 
@@ -66,9 +66,9 @@ impl Sector {
             self.header = d88_sector_header;
             self.data = sector_data;
 
-            return Ok(ret_sector_size as u64);
+            Ok(ret_sector_size as u64)
         } else {
-            return Err(());
+            Err(())
         }
     }
 }
@@ -92,6 +92,7 @@ impl Track {
     ///   * Ok(usize)  Track Data Size
     ///   * Err(())    
     ///
+    #[allow(clippy::result_unit_err)]
     pub fn preset(
         &mut self,
         reader: &mut BufReader<std::fs::File>,
@@ -186,7 +187,7 @@ impl Disk {
     ///   * Ok(usize)  Disk Size
     ///   * Err(())    
     ///
-    #[allow(dead_code)]
+    #[allow(clippy::result_unit_err)]
     pub fn preset(&mut self, reader: &mut BufReader<std::fs::File>) -> Result<usize, ()> {
         if reader.seek(SeekFrom::Start(0)).is_err() {
             return Err(());
@@ -223,6 +224,7 @@ impl Disk {
     ///   * Ok(usize)  Disk Size
     ///   * Err(())    
     ///
+    #[allow(clippy::result_unit_err)]
     pub fn preset_track(&mut self, reader: &mut BufReader<std::fs::File>) -> Result<usize, ()> {
         let mut disk_size: usize = 0;
 
@@ -237,6 +239,9 @@ impl Disk {
             self.track_tbl.push(track);
         }
 
+        if disk_size == 0 {
+            return Err(());
+        }
         //assert_eq!(num_of_track, 80); // 2D Disk
         Ok(disk_size)
     }
