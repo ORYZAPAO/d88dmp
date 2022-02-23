@@ -12,20 +12,31 @@ D88 file is disk Image file for Japanese 8bit Retro PC, [NEC PC-8801 Series](htt
 Example
 -----------
 ```
-  use D88FileIO::fileio::D88FileIO;
-  use D88FileIO::disk::{Sector, Track};
-  use D88FileIO::format::{D88_SectorHdr};
+use D88FileIO::fileio::D88FileIO;
+use D88FileIO::disk::{Sector, Track};
+use D88FileIO::format::{D88_SectorHdr};
 
-  let d88fileio = D88FileIO::open("./ABC.d88");
-  
+fn main(){
+  let mut d88fileio = D88FileIO::open("./ABC.d88");
+
+  // Sort by Disk Sector Order
+  d88fileio.sector_sort();
+
+  // *.d88 File Header
   println!("{:?}", d88fileio.disk.header);
 
+  //
   for track in self.d88fileio.disk.track_tbl.iter() {
     for sector in track.sector_tbl.iter(){
+
+      // *.d88 Disk Sector Header
       println!("{:?}", sector.header);
+
+      // *.d88 Sector Raw Data (byte array)
       println!("{:?}", sector.data);
     }
   }
+}
 
 ```
 
