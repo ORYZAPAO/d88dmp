@@ -1,6 +1,8 @@
 更新履歴
 ----------
-+ ver0.13.0 2022.2.23 Add --sector option(Sort by Disk Sector Order)
++ ver0.13.0 2022.2.25 Add option  
+ --sector (Sort by Disk Sector Order),  
+ --pos <TRACK,SIDE,SECTOR>
 + ver0.12.6 2022.2.20 Refactoring
 + ver0.12.5 2022.2.6 Add Commit English README.md, Refactoring
 + ver0.12.4 crates.io に登録 
