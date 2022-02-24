@@ -77,7 +77,7 @@ impl ReportD88 {
                     println!("File Not Found \"{}\"", d88_path);
                 }
             } else {
-                self.d88fileio = D88FileIO::open(d88_path);
+                self.d88fileio = D88FileIO::open(Path::new(d88_path));
                 if self.d88fileio.is_open() {
                     //
                     if self.sort_by_sector || self.position.is_some() {
