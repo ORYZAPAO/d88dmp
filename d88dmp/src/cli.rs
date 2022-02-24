@@ -1,5 +1,5 @@
 // Commad Line Analysis
-use clap::{App, Arg, ArgMatches};
+use clap::{arg, Arg, ArgMatches};
 
 use crate::version::*;
 
@@ -14,16 +14,22 @@ use crate::version::*;
 ///   * Return clap::ArgMatches Instance
 ///
 pub fn get_cmdline_param() -> ArgMatches {
-    let match1 = App::new(TOOL_NAME)
+    let match1 = clap::Command::new(TOOL_NAME)
         .version(TOOL_VERSION)
         .author(AUTHOR)
         .about("D88 Disk Image Dump.")
         .arg(
-            //
             Arg::new("*.D88")
                 .help("D88 Disk Image")
                 .required(true)
                 .index(1),
+        )
+        .arg(
+            Arg::new("TRACK,SIDE,SECTOR")
+                .help("Track,Side,Sector")
+                .takes_value(true)
+                .long("pos")
+                .short('p'),
         )
         .arg(
             // "-n, --noinfo"  No Report D88 Information

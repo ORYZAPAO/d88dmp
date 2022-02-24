@@ -1,5 +1,6 @@
 use ansi_term::Color;
 use std::mem;
+use std::path::Path;
 
 use ::D88FileIO::disk::{Sector, Track};
 use ::D88FileIO::format::{D88_Header, D88_SectorHdr};
@@ -9,11 +10,20 @@ use D88FileIO::fileio::D88FileIO;
 ///
 /// D88ファイル情報を表示。
 ///
+#[derive(Clone, Copy)]
+pub struct Position {
+    track: u8,
+    side: u8,
+    sector: u8,
+}
+
 pub struct ReportD88 {
-    cmdline_info: clap::ArgMatches,
+    //cmdline_info: clap::ArgMatches,
+    pub path: Option<String>,
     pub noinfo_flg: bool,
     pub nocolor_flg: bool,
     pub sort_by_sector: bool,
+    pub position: Option<Position>,
     pub d88fileio: D88FileIO,
 }
 
@@ -21,15 +31,34 @@ impl ReportD88 {
     /// Constructor
     ///
     pub fn new(_cmdline_info: clap::ArgMatches) -> Self {
+        let _path = if let Some(path) = _cmdline_info.value_of("*.D88") {
+            Some(path.to_string())
+        } else {
+            None
+        };
+
         let _noinfo_flg: bool = _cmdline_info.is_present("no-info");
         let _nocolor_flg: bool = _cmdline_info.is_present("no-color");
         let _sort_by_sector: bool = _cmdline_info.is_present("Sort by Sector Order");
 
+        let _position = if let Some(pos) = _cmdline_info.value_of("TRACK,SIDE,SECTOR") {
+            //Some(pos.to_string())
+            Some(Position {
+                track: 0,
+                side: 0,
+                sector: 0,
+            })
+        } else {
+            None
+        };
+
         Self {
-            cmdline_info: _cmdline_info,
+            path: _path,
+            //cmdline_info: _cmdline_info,
             noinfo_flg: _noinfo_flg,
             nocolor_flg: _nocolor_flg,
             sort_by_sector: _sort_by_sector,
+            position: _position,
             d88fileio: D88FileIO::default(),
         }
     }
@@ -40,9 +69,9 @@ impl ReportD88 {
     ///   * (none)
     ///
     pub fn report(&mut self) {
-        if let Some(d88_path) = self.cmdline_info.value_of("*.D88") {
+        if let Some(ref d88_path) = self.path {
             if self.noinfo_flg {
-                if let Ok(fh) = std::fs::File::open(d88_path) {
+                if let Ok(fh) = std::fs::File::open(Path::new(d88_path)) {
                     self.report_d88_noinfo(fh);
                 } else {
                     println!("File Not Found \"{}\"", d88_path);
@@ -51,7 +80,7 @@ impl ReportD88 {
                 self.d88fileio = D88FileIO::open(d88_path);
                 if self.d88fileio.is_open() {
                     //
-                    if self.sort_by_sector {
+                    if self.sort_by_sector || self.position.is_some() {
                         self.d88fileio.sector_sort();
                     }
 
