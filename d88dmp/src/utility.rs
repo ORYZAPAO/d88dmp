@@ -1,6 +1,30 @@
 use ansi_term::Color;
+use std::process;
 //use super::report_d88::ReportD88;
 use crate::report_d88::ReportD88;
+
+/// Str to Number(u8) 
+///
+///
+pub fn get_str_to_u8(
+  s: &str,      // string
+  err_mes: &str // Error Message
+) -> Result<u8,()> {
+    if let Ok(val) = s.parse(){
+       Ok(val)
+    } else {
+      let mes = format!("{}? {}", s, err_mes);
+      ERROR(mes.as_str());
+      Err(())
+    }
+}
+
+/// Print Error Message
+///
+pub fn ERROR(err_mes: &str) {
+    println!("[ERROR] {}", err_mes);
+    process::exit(0);
+}
 
 impl ReportD88 {
     /// Print Track Bar(Helper function)
