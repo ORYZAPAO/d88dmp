@@ -1,5 +1,5 @@
 // Commad Line Analysis
-use clap::{arg, Arg, ArgMatches};
+use clap::{Arg, ArgMatches};
 
 use crate::version::*;
 
