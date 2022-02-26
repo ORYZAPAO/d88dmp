@@ -6,13 +6,12 @@ use ::D88FileIO::disk::{Sector, Track};
 use ::D88FileIO::format::{D88_Header, D88_SectorHdr};
 use D88FileIO::fileio::D88FileIO;
 
-use crate::utility::{get_str_to_u8, ERROR};
+use crate::utility::get_str_to_u8;
 
 /// ReportD88
 ///
 /// D88ファイル情報を表示。
 ///
-#[derive(Clone, Copy)]
 pub struct Position {
     track: u8,
     side: u8,
@@ -49,9 +48,9 @@ impl ReportD88 {
         let _position = if let Some(pos) = _cmdline_info.value_of("TRACK,SIDE,SECTOR") {
             let pos_str: Vec<&str> = pos.split(',').collect();
 
-            let mut track: Result<u8,()>  = get_str_to_u8(pos_str[0], "Not Track Number");
-            let mut side: Result<u8,()>   = get_str_to_u8(pos_str[1], "Not Side Number");
-            let mut sector: Result<u8,()> = get_str_to_u8(pos_str[2], "Not Sector Number");
+            let track: Result<u8,()>  = get_str_to_u8(pos_str[0], "Not Track Number");
+            let side: Result<u8,()>   = get_str_to_u8(pos_str[1], "Not Side Number");
+            let sector: Result<u8,()> = get_str_to_u8(pos_str[2], "Not Sector Number");
             Some(Position {
                 track: track.unwrap(),
                 side: side.unwrap(),
