@@ -4,98 +4,15 @@ d88dmp
 [![CircleCI](https://circleci.com/gh/ORYZAPAO/d88dmp/tree/main.svg?style=svg)](https://circleci.com/gh/ORYZAPAO/d88dmp/tree/main)
 
 [日本語(Japanese)](/README_J.md)
-![example](https://github.com/ORYZAPAO/d88dmp/blob/main/image/d88info_img.png?raw=true)
 
 Introduction
 -----------
 d88dmp dumps D88 file of retro PC emulators.   
 D88 file is disk Image file for Japanese 8bit Retro PC, [NEC PC-8801 Series](https://en.wikipedia.org/wiki/PC-8800_series), [Sharp X1 Series](https://en.wikipedia.org/wiki/Sharp_X1), [MSX](https://en.wikipedia.org/wiki/MSX) etc..
 
-Output 
---------
-The Output of d88dmp are shown below. 
-### Floppy Disk Header
-  + Disk Name
-  + Write Protect
-  + Floppy Disk Type(2D/2DD/2HD)
-  + Floppy Disk Size(as byte)
-### Track Table
-  + Offset to any Track
-### Sector Header
-  + Cylinder Number(Zero Start...)
-  + Side (0:surface、1:back) 
-  + Sector Number(One Start...)
-  + Sector Size(as byte)
-  + Number Of Sector in Track
-  + Density(D:Single, DD:Double-Density, HD:High-Density)
-  + Delete Flag
-  + Status
-  + Data Size of Sector(as byte)
-### Sector Data
-  + Byte Dump Data
++ [d88dmp](https://github.com/ORYZAPAO/d88dmp/tree/main/d88dmp)  
+  *.D88 dump tool.  
++ [D88FileIO](https://github.com/ORYZAPAO/d88dmp/tree/main/crates/D88FileIO)   
+  *.D88 file access simple library
 
 
-Install
----------------------
-```
-cargo install d88dmp
-```
-
-Source Code 
-------------
---> ![Download](https://github.com/ORYZAPAO/d88dmp/releases)
-
-I use ArchLinux, Intel Mac.
-
-How to Use
-------
-```
- $ d88dmp <D88 Disk Image FIle>
-```
-
-## usage 
-```
-d88dmp ver 0.13.0
-ORYZA (https://github.com/ORYZAPAO)
-D88 Disk Image Dump.
-
-USAGE:
-    d88dmp [OPTIONS] <*.D88>
-
-ARGS:
-    <*.D88>    D88 Disk Image
-
-OPTIONS:
-    -h, --help        Print help information
-    -n, --no-info     No information
-        --no-color    No Color
-        --sector      Sort by Disk Sector Order
-    -V, --version     Print version information
-```
-
-Example) CP/M formated Disk Image(Sharp X1turbo, turbo CP/M)
-
-```
-$ .\d88dmp testdata/turboCP_M_formated_disk.d88 
-```
-
-Build
----------------------
-```
-$ git clone git@github.com:ORYZAPAO/d88dmp.git
-$ cargo build --release
-```
-
-Licence
-----------
- MIT Licens
-
-Change Log
-----------
-+ [Change Log](/CHANGELOG.md)
-
-See also
----------------------
-+ [.D88形式のフロッピーディスクイメージフォーマット - （仮）](https://gra4.hatenadiary.jp/entry/20171108/1510096429)
-+ [D88形式フォーマット | HuDisk](https://boukichi.github.io/HuDisk/DISK.html)
-+ [wii88/FORMAT.TXT at master · jpzm/wii88](https://github.com/jpzm/wii88/blob/master/document/FORMAT.TXT)
