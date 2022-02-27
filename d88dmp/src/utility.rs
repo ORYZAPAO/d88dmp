@@ -5,6 +5,7 @@ use crate::report_d88::ReportD88;
 
 /// Print Error Message
 ///
+#[allow(non_snake_case)]
 pub fn ERROR(err_mes: &str) {
     println!("[ERROR] {}", err_mes);
     process::exit(0);
