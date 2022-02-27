@@ -63,14 +63,18 @@ USAGE:
     d88dmp [OPTIONS] <*.D88>
 
 ARGS:
-    <*.D88>    D88 Disk Image
+    <*.D88>    **.D88 ディスクイメージのファイル
 
 OPTIONS:
-    -h, --help       ヘルプメッセージを表示
-    -n, --no-info    ディスクやセクタのヘッダ情報を表示しない
-        --no-color   カラー表示の無効化
-        --sector     セクタ番号順に表示
-    -V, --version    バージョン情報を表示
+    -h, --help                            ヘルプメッセージを表示
+    -n, --no-info                         ディスクやセクタのヘッダ情報を表示しない
+        --no-color                        カラー表示の無効化
+    -p, --position <TRACK,SIDE,SECTOR>    特定のセクタを表示
+                                            トラック番号   0,1,2, ... (0スタート)
+                                            ディスクサイド 0:表, 1:裏 
+                                            セクタ番号     1,2,3, ... (1スタート)
+    -s, --sort                            セクタ番号順に表示
+    -V, --version                         バージョン情報を表示
 
 ```
 
@@ -85,7 +89,7 @@ $ .\d88dmp sample/CPM_Format_2D_turboCPM_X1turbo.d88
 
 ソースコードからのコンパイルは [Rust](https://www.rust-lang.org) が必要です。  
 GitHub から git clone したあと、ビルド方法は普通にcargoコマンドを叩くだけです。  
-```
+```d
 $ git clone git@github.com:ORYZAPAO/d88dmp.git
 $ cargo build --release
 ```
