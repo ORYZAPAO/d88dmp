@@ -152,27 +152,27 @@ impl ReportD88 {
 
     ///
     ///
-    fn get_disk_name(&self){
+    fn get_disk_name(&self) -> String{
         let disk_name;
         unsafe {
             disk_name = String::from_utf8_unchecked(self.d88fileio.disk.header.disk_name.to_vec());
         }
-        print!("Name({}), ", disk_name);
+        format!("Name({}), ", disk_name)
     }
 
-    fn get_disk_write_protect(&self){
-        print!(
+    fn get_disk_write_protect(&self) -> String{
+        format!(
             "WriteProtect({}), ",        
             match self.d88fileio.disk.header.write_protect {
                 0x10 => "Protected",
                 0x00 => "None",
                 _ => "!! Illegal !!",
             }
-            );
+            )
     }
 
-    fn get_disk_type(&self){
-        print!(
+    fn get_disk_type(&self) -> String{
+        format!(
             "Type({} Disk), ",
             match self.d88fileio.disk.header.disk_type {
                 0x00 => "2D",
@@ -180,11 +180,11 @@ impl ReportD88 {
                 0x20 => "2HD",
                 _ => "??",
             }
-        );
+        )
     }
 
-    fn get_disk_size(&self){
-        print!("DiskSize({} byte)", self.d88fileio.disk.header.disk_size);        
+    fn get_disk_size(&self) -> String{
+        format!("DiskSize({} byte)", self.d88fileio.disk.header.disk_size)
     }
 
     /// Report D88 Header (Helper function)
