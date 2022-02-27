@@ -6,7 +6,7 @@ use ::D88FileIO::disk::{Sector, Track};
 use ::D88FileIO::format::{D88_Header, D88_SectorHdr};
 use D88FileIO::fileio::D88FileIO;
 
-use crate::utility::get_str_to_u8;
+use crate::cli::get_str_to_u8;
 
 /// ReportD88
 ///
@@ -19,7 +19,6 @@ pub struct Position {
 }
 
 pub struct ReportD88 {
-    //cmdline_info: clap::ArgMatches,
     pub path: Option<String>,
     pub noinfo_flg: bool,
     pub nocolor_flg: bool,
@@ -43,18 +42,22 @@ impl ReportD88 {
 
         let _noinfo_flg: bool = _cmdline_info.is_present("no-info");
         let _nocolor_flg: bool = _cmdline_info.is_present("no-color");
-        let _sort_by_sector: bool = _cmdline_info.is_present("Sort by Sector Order");
+        let mut _sort_by_sector: bool = _cmdline_info.is_present("Sort by Sector Order");
 
         let _position = if let Some(pos) = _cmdline_info.value_of("TRACK,SIDE,SECTOR") {
             let pos_str: Vec<&str> = pos.split(',').collect();
 
-            let track: Result<u8,()>  = get_str_to_u8(pos_str[0], "Not Track Number");
-            let side: Result<u8,()>   = get_str_to_u8(pos_str[1], "Not Side Number");
-            let sector: Result<u8,()> = get_str_to_u8(pos_str[2], "Not Sector Number");
+            let track: Result<u8, ()> = get_str_to_u8(pos_str[0], "Not Track Number");
+            let side: Result<u8, ()> = get_str_to_u8(pos_str[1], "Not Side Number");
+            let sector: Result<u8, ()> = get_str_to_u8(pos_str[2], "Not Sector Number");
+
+            // Sort by Sector Order
+            _sort_by_sector = true;
+
             Some(Position {
                 track: track.unwrap(),
                 side: side.unwrap(),
-                sector: sector.unwrap(),
+                sector: (sector.unwrap() - 1),
             })
         } else {
             None
@@ -62,7 +65,6 @@ impl ReportD88 {
 
         Self {
             path: _path,
-            //cmdline_info: _cmdline_info,
             noinfo_flg: _noinfo_flg,
             nocolor_flg: _nocolor_flg,
             sort_by_sector: _sort_by_sector,
@@ -103,6 +105,14 @@ impl ReportD88 {
 
     /// Report D88 File
     ///
+    fn check_sector_position(&self, sector : &Sector){
+    }
+
+
+
+
+    /// Report D88 File
+    ///
     /// D88ファイル情報を表示する。
     ///
     /// # Argument
@@ -113,10 +123,18 @@ impl ReportD88 {
     ///  * (none)
     ///
     pub fn report_d88(&self) {
-        let _ = self.report_d88_header();
-
-        for track in self.d88fileio.disk.track_tbl.iter() {
-            self.report_track(track);
+        if let Some(ref position) = self.position {
+            // Report One Sector
+            let sector = &self.d88fileio.disk.track_tbl
+                [((position.track * 2) + position.side) as usize]
+                .sector_tbl[position.sector as usize];
+            self.report_sector(sector);
+        } else {
+            // Report All
+            let _ = self.report_d88_header();
+            for track in self.d88fileio.disk.track_tbl.iter() {
+                self.report_track(track);
+            }
         }
     }
 
@@ -128,6 +146,45 @@ impl ReportD88 {
 
     pub fn report_sector(&self, sector: &Sector) {
         self.print_sector(sector);
+    }
+
+
+
+    ///
+    ///
+    fn get_disk_name(&self){
+        let disk_name;
+        unsafe {
+            disk_name = String::from_utf8_unchecked(self.d88fileio.disk.header.disk_name.to_vec());
+        }
+        print!("Name({}), ", disk_name);
+    }
+
+    fn get_disk_write_protect(&self){
+        print!(
+            "WriteProtect({}), ",        
+            match self.d88fileio.disk.header.write_protect {
+                0x10 => "Protected",
+                0x00 => "None",
+                _ => "!! Illegal !!",
+            }
+            );
+    }
+
+    fn get_disk_type(&self){
+        print!(
+            "Type({} Disk), ",
+            match self.d88fileio.disk.header.disk_type {
+                0x00 => "2D",
+                0x10 => "2DD",
+                0x20 => "2HD",
+                _ => "??",
+            }
+        );
+    }
+
+    fn get_disk_size(&self){
+        print!("DiskSize({} byte)", self.d88fileio.disk.header.disk_size);        
     }
 
     /// Report D88 Header (Helper function)
