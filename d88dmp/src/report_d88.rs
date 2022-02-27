@@ -2,8 +2,9 @@ use ansi_term::Color;
 use std::mem;
 use std::path::Path;
 
-use ::D88FileIO::disk::{Sector, Track};
 use ::D88FileIO::format::{D88_Header, D88_SectorHdr};
+use ::D88FileIO::sector::Sector;
+use ::D88FileIO::track::Track;
 use D88FileIO::fileio::D88FileIO;
 
 use crate::cli::get_str_to_u8;
@@ -30,10 +31,9 @@ pub struct ReportD88 {
 impl ReportD88 {
     /// Constructor
     ///
-
-    /// Constructor
-    ///
     pub fn new(_cmdline_info: clap::ArgMatches) -> Self {
+        // Get Command Line Option
+        //
         let _path = if let Some(path) = _cmdline_info.value_of("*.D88") {
             Some(path.to_string())
         } else {
@@ -42,7 +42,7 @@ impl ReportD88 {
 
         let _noinfo_flg: bool = _cmdline_info.is_present("no-info");
         let _nocolor_flg: bool = _cmdline_info.is_present("no-color");
-        let mut _sort_by_sector: bool = _cmdline_info.is_present("Sort by Sector Order");
+        let mut _sort_by_sector: bool = _cmdline_info.is_present("Sort by Disk Sector Order");
 
         let _position = if let Some(pos) = _cmdline_info.value_of("TRACK,SIDE,SECTOR") {
             let pos_str: Vec<&str> = pos.split(',').collect();
@@ -63,6 +63,8 @@ impl ReportD88 {
             None
         };
 
+        //
+        //
         Self {
             path: _path,
             noinfo_flg: _noinfo_flg,
@@ -105,14 +107,6 @@ impl ReportD88 {
 
     /// Report D88 File
     ///
-    fn check_sector_position(&self, sector : &Sector){
-    }
-
-
-
-
-    /// Report D88 File
-    ///
     /// D88ファイル情報を表示する。
     ///
     /// # Argument
@@ -146,45 +140,6 @@ impl ReportD88 {
 
     pub fn report_sector(&self, sector: &Sector) {
         self.print_sector(sector);
-    }
-
-
-
-    ///
-    ///
-    fn get_disk_name(&self) -> String{
-        let disk_name;
-        unsafe {
-            disk_name = String::from_utf8_unchecked(self.d88fileio.disk.header.disk_name.to_vec());
-        }
-        format!("Name({}), ", disk_name)
-    }
-
-    fn get_disk_write_protect(&self) -> String{
-        format!(
-            "WriteProtect({}), ",        
-            match self.d88fileio.disk.header.write_protect {
-                0x10 => "Protected",
-                0x00 => "None",
-                _ => "!! Illegal !!",
-            }
-            )
-    }
-
-    fn get_disk_type(&self) -> String{
-        format!(
-            "Type({} Disk), ",
-            match self.d88fileio.disk.header.disk_type {
-                0x00 => "2D",
-                0x10 => "2DD",
-                0x20 => "2HD",
-                _ => "??",
-            }
-        )
-    }
-
-    fn get_disk_size(&self) -> String{
-        format!("DiskSize({} byte)", self.d88fileio.disk.header.disk_size)
     }
 
     /// Report D88 Header (Helper function)
@@ -248,29 +203,13 @@ impl ReportD88 {
 
         // Report File Header
         //
-        let disk_name;
-        unsafe {
-            disk_name = String::from_utf8_unchecked(header.disk_name.to_vec());
-        }
-        print!("Name({}), ", disk_name);
         print!(
-            "WriteProtect({}), ",
-            match header.write_protect {
-                0x10 => "Protected",
-                0x00 => "None",
-                _ => "!! Illegal !!",
-            }
+            "{}, {}, {}, {}",
+            self.d88fileio.disk.get_disk_name(),
+            self.d88fileio.disk.get_disk_write_protect(),
+            self.d88fileio.disk.get_disk_type(),
+            self.d88fileio.disk.get_disk_size()
         );
-        print!(
-            "Type({} Disk), ",
-            match header.disk_type {
-                0x00 => "2D",
-                0x10 => "2DD",
-                0x20 => "2HD",
-                _ => "??",
-            }
-        );
-        print!("DiskSize({} byte)", header.disk_size);
         println!();
 
         mem::size_of::<D88_Header>()
@@ -309,44 +248,17 @@ impl ReportD88 {
         // Print Sector Header
         //
         print!(
-            "Track({}), Side({}), Sector({}), ",
-            sector.header.track, sector.header.side, sector.header.sector
+            "{}, {}, {}, {}, {}, {}, {}, {}, {}",
+            sector.get_track(),
+            sector.get_side(),
+            sector.get_sector(),
+            sector.get_sector_size(),
+            sector.get_num_of_sector(),
+            sector.get_status(),
+            sector.get_density(),
+            sector.get_mark(),
+            sector.get_data_size(),
         );
-
-        print!("Size({} byte/sec), ", 128 << (sector.header.sector_size));
-        print!("NumOfSec({} sec/track), ", sector.header.number_of_sec);
-        print!(
-            "Status({}), ",
-            match sector.header.status {
-                0x00 => "OK",           // 正常
-                0x10 => "DELETED",      // 削除済みデータ
-                0xa0 => "ID CRC Err",   // ID CRC エラー
-                0xb0 => "Data CRC Err", // データ CRC エラー
-                0xe0 => "No Addr Mark", // アドレスマークなし
-                0xf0 => "No Data Mark", // データマークなし
-                _ => "??",
-            }
-        );
-        print!(
-            "Density({:02x}h), ",
-            //match sector.header.density {
-            //    0x00 => "D",  // 倍密度 // dencityの仕様がよく分からない。
-            //    0x40 => "S",  // 単密度
-            //    0x01 => "HD", // 高密度
-            //    _ => "??",
-            //}
-            sector.header.density
-        );
-        print!(
-            "Mark({}), ",
-            match sector.header.deleted_mark {
-                0x00 => "NORMAL",
-                0x10 => "DELETED",
-                _ => "??",
-            }
-        );
-        print!("DataSize({} byte), ", sector.header.size_of_data);
-
         println!();
 
         // Print Sector Raw Data
