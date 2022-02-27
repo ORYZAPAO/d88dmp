@@ -7,7 +7,8 @@ use std::path::Path;
 
 use crate::format::D88_Header;
 
-use crate::disk::{Disk, Sector};
+use crate::disk::Disk;
+use crate::sector::Sector;
 
 ///
 ///
