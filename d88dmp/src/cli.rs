@@ -28,7 +28,7 @@ pub fn get_cmdline_param() -> ArgMatches {
         .arg(
             // "-p, --position"
             Arg::new("TRACK,SIDE,SECTOR")
-                .help("Track(0,1,2,...), Side(0 or 1), Sector(1,2,3,...)")
+                .help("Sector Position\n  <TRACK>  0,1,2, ...\n  <SIDE>   0:front or 1:back\n  <SECTOR> 1,2,3, ...")
                 .takes_value(true)
                 .long("position")
                 .short('p'),
@@ -50,7 +50,7 @@ pub fn get_cmdline_param() -> ArgMatches {
         .arg(
             // "-s, --sort"  No Color
             Arg::new("Sort by Disk Sector Order")
-                .help("Sort by Disk Sector Order")
+                .help("Sort by disk sector order")
                 .short('s')
                 .long("sort"),
         )

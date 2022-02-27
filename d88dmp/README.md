@@ -66,11 +66,26 @@ ARGS:
     <*.D88>    D88 Disk Image
 
 OPTIONS:
-    -h, --help        Print help information
-    -n, --no-info     No information
-        --no-color    No Color
-        --sector      Sort by Disk Sector Order
-    -V, --version     Print version information
+    -h, --help
+            Print help information
+
+    -n, --no-info
+            No information
+
+        --no-color
+            No Color
+
+    -p, --position <TRACK,SIDE,SECTOR>
+            Sector Position
+              <TRACK>  0,1,2, ...
+              <SIDE>   0:front or 1:back
+              <SECTOR> 1,2,3, ...
+
+    -s, --sort
+            Sort by disk sector order
+
+    -V, --version
+            Print version information
 ```
 
 Example) CP/M formated Disk Image(Sharp X1turbo, turbo CP/M)
