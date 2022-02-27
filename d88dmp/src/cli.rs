@@ -1,8 +1,8 @@
 // Commad Line Analysis
 use clap::{Arg, ArgMatches};
 
-use crate::version::*;
 use crate::utility::ERROR;
+use crate::version::*;
 
 /// Commad Line Analysis
 ///
@@ -48,10 +48,10 @@ pub fn get_cmdline_param() -> ArgMatches {
         )
         .arg(
             // "-s, --sector"  No Color
-            Arg::new("Sort by Sector Order")
+            Arg::new("Sort by Disk Sector Order")
                 .help("Sort by Disk Sector Order")
                 .short('s')
-                .long("sector"),
+                .long("sort"),
         )
         .get_matches();
 
@@ -89,7 +89,6 @@ pub fn get_cmdline_param() -> ArgMatches {
     //      .get_matches();
 }
 
-
 /// Str to Number(u8)
 ///
 ///
@@ -105,4 +104,3 @@ pub fn get_str_to_u8(
         Err(())
     }
 }
-
