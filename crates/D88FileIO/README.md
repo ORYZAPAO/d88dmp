@@ -13,13 +13,8 @@ Example
 -----------
 ```
 use D88FileIO::fileio::D88FileIO;
-use D88FileIO::disk::Disk;
-use D88FileIO::sector::Sector;
-use D88FileIO::track::Track;
 
-use D88FileIO::format::{D88_SectorHdr};
-
-fn main(){
+fn main() {
   let mut d88fileio = D88FileIO::open("./ABC.d88");
 
   // Sort by Disk Sector Order
@@ -29,7 +24,7 @@ fn main(){
   println!("{:?}", d88fileio.disk.header);
 
   //
-  for track in self.d88fileio.disk.track_tbl.iter() {
+  for track in d88fileio.disk.track_tbl.iter() {
     for sector in track.sector_tbl.iter(){
 
       // *.d88 Disk Sector Header
