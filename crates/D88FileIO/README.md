@@ -13,7 +13,10 @@ Example
 -----------
 ```
 use D88FileIO::fileio::D88FileIO;
-use D88FileIO::disk::{Sector, Track};
+use D88FileIO::disk::Disk;
+use D88FileIO::sector::Sector;
+use D88FileIO::track::Track;
+
 use D88FileIO::format::{D88_SectorHdr};
 
 fn main(){
