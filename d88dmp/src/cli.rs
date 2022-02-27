@@ -2,6 +2,7 @@
 use clap::{Arg, ArgMatches};
 
 use crate::version::*;
+use crate::utility::ERROR;
 
 /// Commad Line Analysis
 ///
@@ -26,7 +27,7 @@ pub fn get_cmdline_param() -> ArgMatches {
         )
         .arg(
             Arg::new("TRACK,SIDE,SECTOR")
-                .help("Track,Side,Sector")
+                .help("Track(0,1,2,...), Side(0 or 1), Sector(1,2,3,...)")
                 .takes_value(true)
                 .long("pos")
                 .short('p'),
@@ -49,7 +50,7 @@ pub fn get_cmdline_param() -> ArgMatches {
             // "-s, --sector"  No Color
             Arg::new("Sort by Sector Order")
                 .help("Sort by Disk Sector Order")
-                //.short('s')
+                .short('s')
                 .long("sector"),
         )
         .get_matches();
@@ -87,3 +88,21 @@ pub fn get_cmdline_param() -> ArgMatches {
     //              .about("print debug information verbosely")))
     //      .get_matches();
 }
+
+
+/// Str to Number(u8)
+///
+///
+pub fn get_str_to_u8(
+    s: &str,       // string
+    err_mes: &str, // Error Message
+) -> Result<u8, ()> {
+    if let Ok(val) = s.parse() {
+        Ok(val)
+    } else {
+        let mes = format!("{}? {}", s, err_mes);
+        ERROR(mes.as_str());
+        Err(())
+    }
+}
+
