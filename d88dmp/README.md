@@ -76,7 +76,8 @@ OPTIONS:
 Example) CP/M formated Disk Image(Sharp X1turbo, turbo CP/M)
 
 ```
-$ .\d88dmp testdata/turboCP_M_formated_disk.d88 
+$ .\d88dmp sample/CPM_Format_2D_turboCPM_X1turbo.d88
+
 ```
 
 Build

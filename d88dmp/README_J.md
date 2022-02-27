@@ -77,7 +77,7 @@ OPTIONS:
 実行例）X1 turbo用のturbo CP/Mでファーマットしたディスクイメージ(CPM_data.d88)を表示  
 
 ```
-$ .\d88dmp testdata/turboCP_M_formated_disk.d88 
+$ .\d88dmp sample/CPM_Format_2D_turboCPM_X1turbo.d88
 ```
 
 ビルド、コンパイル方法
