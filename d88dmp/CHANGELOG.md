@@ -1,6 +1,6 @@
 更新履歴
 ----------
-+ ver0.13.0 2022.2.25 Add option  
++ ver0.13.0 2022.2.27 Add new options.  
  --sector (Sort by Disk Sector Order),  
  --position <TRACK,SIDE,SECTOR>
 + ver0.12.6 2022.2.20 Refactoring
