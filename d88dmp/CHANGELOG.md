@@ -1,10 +1,11 @@
 更新履歴
 ----------
-+ ver0.13.0 2022.2.27 Add new options.  
++ ver0.13.1 2022.03.01 Fix Sector Header's bug
++ ver0.13.0 2022.02.27 Add new options.  
  --sector (Sort by Disk Sector Order),  
  --position <TRACK,SIDE,SECTOR>
-+ ver0.12.6 2022.2.20 Refactoring
-+ ver0.12.5 2022.2.6 Add Commit English README.md, Refactoring
++ ver0.12.6 2022.02.20 Refactoring
++ ver0.12.5 2022.02.06 Add Commit English README.md, Refactoring
 + ver0.12.4 crates.io に登録 
 + ver0.12.2 220131 d88info -> d88dmp に名前変更。リファクタリング
 + ver0.12a_220116 実行バイナリ登録
