@@ -79,11 +79,11 @@ impl Sector {
     }
 
     pub fn get_side(&self) -> String {
-        format!("Track({})", self.header.side)
+        format!("Side({})", self.header.side)
     }
 
     pub fn get_sector(&self) -> String {
-        format!("Track({})", self.header.side)
+        format!("Sector({})", self.header.sector)
     }
 
     pub fn get_sector_size(&self) -> String {
