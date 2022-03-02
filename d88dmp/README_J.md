@@ -100,7 +100,7 @@ $ cargo build --release
 
 更新履歴
 ----------
-+ [更新履歴](/CHANGELOG.md)
++ [更新履歴](/d88dmp/CHANGELOG.md)
 
 参考情報
 ---------------------
