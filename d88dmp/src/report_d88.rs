@@ -122,6 +122,8 @@ impl ReportD88 {
             let sector = &self.d88fileio.disk.track_tbl
                 [((position.track * 2) + position.side) as usize]
                 .sector_tbl[position.sector as usize];
+
+            self.print_offset_bar();
             self.report_sector(sector);
         } else {
             // Report All
@@ -164,7 +166,7 @@ impl ReportD88 {
 
         // Output Track Table
         //
-        self.print_track_bar();
+        self.print_track_offset_bar();
         for n in 0..164 {
             if (n % 8) == 0 {
                 println!();
@@ -198,7 +200,7 @@ impl ReportD88 {
                 mem::transmute::<D88_Header, [u8; mem::size_of::<D88_Header>()]>((*header).clone());
         }
 
-        self.print_title_bar();
+        self.print_offset_bar();
         self.print_16byte(&byte_img, 0x0000_u64, ansi_term::Color::Green);
 
         // Report File Header

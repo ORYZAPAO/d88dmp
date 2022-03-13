@@ -16,7 +16,7 @@ impl ReportD88 {
     ///
     /// タイトルバーを表示(Track)
     ///
-    pub fn print_track_bar(&self) {
+    pub fn print_track_offset_bar(&self) {
         println!("Track Table");
         println!("hex  dec  +0    +1    +2    +3    +4    +5    +6    +7   ");
         print!("--- ----  -----------------------------------------------");
@@ -26,7 +26,7 @@ impl ReportD88 {
     ///
     /// タイトルバーを表示(Sector)
     ///
-    pub fn print_title_bar(&self) {
+    pub fn print_offset_bar(&self) {
         println!("Offst  +0 +1 +2 +3 +4 +5 +6 +7 +8 +9 +a +b +c +d +e +f                 ");
         println!("-----  -----------------------------------------------                 ");
     }

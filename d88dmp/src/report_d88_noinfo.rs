@@ -10,7 +10,7 @@ impl ReportD88 {
             let mut ofst: usize = 0;
             let mut buf16: [u8; 16] = [0; 16];
 
-            self.print_title_bar();
+            self.print_offset_bar();
 
             while ofst < size {
                 //for idx in 0..16 {
