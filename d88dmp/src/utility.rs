@@ -12,7 +12,7 @@ pub fn ERROR(err_mes: &str) {
 }
 
 impl ReportD88 {
-    /// Print Track Bar(Helper function)
+    /// Print Track Offset Bar(Helper function)
     ///
     /// タイトルバーを表示(Track)
     ///
@@ -22,7 +22,7 @@ impl ReportD88 {
         print!("--- ----  -----------------------------------------------");
     }
 
-    /// Print Tiltle Bar(Helper function)
+    /// Print Offset Bar(Helper function)
     ///
     /// タイトルバーを表示(Sector)
     ///
