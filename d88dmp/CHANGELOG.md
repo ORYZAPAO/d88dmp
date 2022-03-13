@@ -1,5 +1,6 @@
 更新履歴
 ----------
++ ver0.13.2 2022.03.13 Add printing offset bar in --potion option.
 + ver0.13.1 2022.03.01 Fix Sector Header's bug
 + ver0.13.0 2022.02.27 Add new options.  
  --sector (Sort by Disk Sector Order),  
