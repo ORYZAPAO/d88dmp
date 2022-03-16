@@ -108,7 +108,7 @@ Licence
 
 Change Log
 ----------
-+ [Change Log](/d88dmp/CHANGELOG.md)
++ [Change Log](CHANGELOG.md)
 
 See also
 ---------------------
