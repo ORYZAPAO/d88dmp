@@ -9,7 +9,7 @@ d88dmp
 Introduction
 -----------
 d88dmp is D88 file dump tool.   
-D88 file is disk Image file for Japanese 8bit Retro PC, [NEC PC-8801 Series](https://en.wikipedia.org/wiki/PC-8800_series), [Sharp X1 Series](https://en.wikipedia.org/wiki/Sharp_X1), [MSX](https://en.wikipedia.org/wiki/MSX) etc..
+D88 file is disk Image for Retro PC, [NEC PC-8801 Series](https://en.wikipedia.org/wiki/PC-8800_series), [Sharp X1 Series](https://en.wikipedia.org/wiki/Sharp_X1), [MSX](https://en.wikipedia.org/wiki/MSX) etc..
 
 Output 
 --------
