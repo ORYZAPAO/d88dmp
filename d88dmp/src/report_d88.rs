@@ -191,7 +191,6 @@ impl ReportD88 {
         }
         println!();
 
-      
         // ----------------------------------------
         // Report All Sector Summary
         // ----------------------------------------
@@ -206,7 +205,8 @@ impl ReportD88 {
                 //
                 let mes;
                 if sector_ct == 0 {
-                    mes = format!("{0:02}h {0:3}d {1:3}  {2:3} {3:3} ",
+                    mes = format!(
+                        "{0:02}h {0:3}d {1:3}  {2:3} {3:3} ",
                         sector.header.track,
                         sector.header.side,
                         sector.header.sector,
@@ -216,21 +216,21 @@ impl ReportD88 {
                     mes = format!("... .... ...  {:3} ... ", sector.header.sector,);
                 }
 
-               if !self.nocolor_flg {
+                if !self.nocolor_flg {
                     print!("{} ", Color::Cyan.paint(&mes));
                 } else {
                     print!("{} ", mes);
                 }
 
-              //
-              let offset_formated = format!("{:05x}h ",sector.offset);
-              if !self.nocolor_flg {
-                print!("{} ",Color::Cyan.paint(offset_formated));
-              }else{
-                print!("{} ", offset_formated);
-              }
-                
-              println!(
+                //
+                let offset_formated = format!("{:05x}h ", sector.offset);
+                if !self.nocolor_flg {
+                    print!("{} ", Color::Cyan.paint(offset_formated));
+                } else {
+                    print!("{} ", offset_formated);
+                }
+
+                println!(
                     "{}, {}, {}, {}, {}, {}",
                     sector.get_sector_size(),
                     sector.get_num_of_sector(),
@@ -243,7 +243,6 @@ impl ReportD88 {
                 //
                 sector_ct += 1;
             } // for sector in track.sector_tbl.iter() {
-
         } // for track in self.d88fileio.disk.track_tbl.iter() {
 
         // ----------------------------------------
@@ -257,7 +256,7 @@ impl ReportD88 {
             byte_img =
                 mem::transmute::<D88_Header, [u8; mem::size_of::<D88_Header>()]>((*header).clone());
         }
-        
+
         self.print_offset_bar();
         self.print_16byte(&byte_img, 0x0000_u64, ansi_term::Color::Green);
 
