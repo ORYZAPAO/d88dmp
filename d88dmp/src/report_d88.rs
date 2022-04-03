@@ -200,21 +200,19 @@ impl ReportD88 {
         self.print_sector_summary_bar();
 
         for track in self.d88fileio.disk.track_tbl.iter() {
-            let mut sector_ct = 0;
-            for sector in track.sector_tbl.iter() {
+            for (sector_ct, sector) in track.sector_tbl.iter().enumerate() {
                 //
-                let mes;
-                if sector_ct == 0 {
-                    mes = format!(
+                let mes = if sector_ct == 0 {
+                    format!(
                         "{0:02}h {0:3}d {1:3}  {2:3} {3:3} ",
                         sector.header.track,
                         sector.header.side,
                         sector.header.sector,
                         track.number_of_sector
-                    );
+                    )
                 } else {
-                    mes = format!("... .... ...  {:3} ... ", sector.header.sector,);
-                }
+                    format!("... .... ...  {:3} ... ", sector.header.sector)
+                };
 
                 if !self.nocolor_flg {
                     print!("{} ", Color::Cyan.paint(&mes));
@@ -240,8 +238,6 @@ impl ReportD88 {
                     sector.get_data_size(),
                 );
 
-                //
-                sector_ct += 1;
             } // for sector in track.sector_tbl.iter() {
         } // for track in self.d88fileio.disk.track_tbl.iter() {
 
