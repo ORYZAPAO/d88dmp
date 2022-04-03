@@ -31,7 +31,7 @@ impl ReportD88 {
         println!("Sector Summary");
         println!();
         println!("Track    Side Sector");
-        println!("hex  dec      No. Num  Offset  etc.");
+        println!("hex  dec No.  No. Num  Offset  etc.");
         println!("--- ---- ---  --- ---  ------  ---------------------------------- ...");
     }
 
