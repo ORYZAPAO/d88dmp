@@ -1,6 +1,6 @@
 [package]
 name = "d88dmp"
-version = "0.13.2"
+version = "0.13.3"
 authors = ["ORYZAPAO <oryzapao@gmail.com>"]
 edition = "2018"
 repository = "https://github.com/ORYZAPAO/d88dmp"
@@ -21,4 +21,4 @@ libc = "0.2"
 clap = "3.0.13"
 ansi_term = "0.12.1"
 
-D88FileIO = { version="0.0.7", path="../crates/D88FileIO" }
+D88FileIO = { version="0.0.8", path="../crates/D88FileIO" }
