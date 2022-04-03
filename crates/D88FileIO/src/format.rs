@@ -15,7 +15,7 @@ pub struct D88_Header {
     pub write_protect: u8,
     pub disk_type: u8,
     pub disk_size: u32,
-    pub track_tbl: [u32; 164],
+    pub track_offset_tbl: [u32; 164],
 }
 
 impl Default for D88_Header {
@@ -26,7 +26,7 @@ impl Default for D88_Header {
             write_protect: 0u8,
             disk_type: 0u8,
             disk_size: 0u32,
-            track_tbl: [0u32; MAX_SECTOR as usize],
+            track_offset_tbl: [0u32; MAX_SECTOR as usize],
         }
     }
 }

@@ -108,7 +108,7 @@ impl Disk {
     pub fn preset_track(&mut self, reader: &mut BufReader<std::fs::File>) -> Result<usize, ()> {
         let mut disk_size: usize = 0;
 
-        for track_offset in self.header.track_tbl {
+        for track_offset in self.header.track_offset_tbl {
             let mut track = Track::default();
 
             if let Ok(track_size) = track.preset(reader, track_offset as u64) {
