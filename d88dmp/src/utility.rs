@@ -12,14 +12,27 @@ pub fn ERROR(err_mes: &str) {
 }
 
 impl ReportD88 {
-    /// Print Track Offset Bar(Helper function)
+    /// Print Track Offset Table Bar(Helper function)
     ///
     /// タイトルバーを表示(Track)
     ///
-    pub fn print_track_offset_bar(&self) {
-        println!("Track Table");
+    pub fn print_track_offset_table_bar(&self) {
+        println!("Track Offset Table");
+        println!();
         println!("hex  dec  +0    +1    +2    +3    +4    +5    +6    +7   ");
         print!("--- ----  -----------------------------------------------");
+    }
+
+    /// Print Sector Size Bar(Helper function)
+    ///
+    /// タイトルバーを表示(Sector)
+    ///
+    pub fn print_sector_summary_bar(&self) {
+        println!("Sector Summary");
+        println!();
+        println!("Track    Side Sector");
+        println!("hex  dec      No. Num  Offset  etc.");
+        println!("--- ---- ---  --- ---  ------  ---------------------------------- ...");
     }
 
     /// Print Offset Bar(Helper function)

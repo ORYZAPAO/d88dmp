@@ -164,9 +164,10 @@ impl ReportD88 {
         //
         let header = &(self.d88fileio.disk.header);
 
-        // Output Track Table
-        //
-        self.print_track_offset_bar();
+        // ----------------------------------------
+        // Report Track Offset Table
+        // ----------------------------------------
+        self.print_track_offset_table_bar();
         for n in 0..164 {
             if (n % 8) == 0 {
                 println!();
@@ -175,22 +176,79 @@ impl ReportD88 {
                     print!(
                         "{}  {:05x} ",
                         (format!("{0:2x}h {0:3}d", n)),
-                        header.track_tbl[n]
+                        header.track_offset_tbl[n]
                     );
                 } else {
                     print!(
                         "{}  {:05x} ",
                         Color::Cyan.paint(format!("{0:2x}h {0:3}d", n)),
-                        header.track_tbl[n]
+                        header.track_offset_tbl[n]
                     );
                 }
             } else {
-                print!("{:05x} ", header.track_tbl[n]);
+                print!("{:05x} ", header.track_offset_tbl[n]);
             }
         }
+        println!();
 
+      
+        // ----------------------------------------
+        // Report All Sector Summary
+        // ----------------------------------------
+        println!();
+        println!();
+
+        self.print_sector_summary_bar();
+
+        for track in self.d88fileio.disk.track_tbl.iter() {
+            let mut sector_ct = 0;
+            for sector in track.sector_tbl.iter() {
+                //
+                let mes;
+                if sector_ct == 0 {
+                    mes = format!("{0:02}h {0:3}d {1:3}  {2:3} {3:3} ",
+                        sector.header.track,
+                        sector.header.side,
+                        sector.header.sector,
+                        track.number_of_sector
+                    );
+                } else {
+                    mes = format!("... .... ...  {:3} ... ", sector.header.sector,);
+                }
+
+               if !self.nocolor_flg {
+                    print!("{} ", Color::Cyan.paint(&mes));
+                } else {
+                    print!("{} ", mes);
+                }
+
+              //
+              let offset_formated = format!("{:05x}h ",sector.offset);
+              if !self.nocolor_flg {
+                print!("{} ",Color::Cyan.paint(offset_formated));
+              }else{
+                print!("{} ", offset_formated);
+              }
+                
+              println!(
+                    "{}, {}, {}, {}, {}, {}",
+                    sector.get_sector_size(),
+                    sector.get_num_of_sector(),
+                    sector.get_status(),
+                    sector.get_density(),
+                    sector.get_mark(),
+                    sector.get_data_size(),
+                );
+
+                //
+                sector_ct += 1;
+            } // for sector in track.sector_tbl.iter() {
+
+        } // for track in self.d88fileio.disk.track_tbl.iter() {
+
+        // ----------------------------------------
         // Report File Header (Byte Image)
-        //
+        // ----------------------------------------
         println!();
         println!();
         let byte_img;
@@ -199,7 +257,7 @@ impl ReportD88 {
             byte_img =
                 mem::transmute::<D88_Header, [u8; mem::size_of::<D88_Header>()]>((*header).clone());
         }
-
+        
         self.print_offset_bar();
         self.print_16byte(&byte_img, 0x0000_u64, ansi_term::Color::Green);
 
@@ -214,6 +272,7 @@ impl ReportD88 {
         );
         println!();
 
+        // ----------------------------------------
         mem::size_of::<D88_Header>()
     }
 
