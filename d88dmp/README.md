@@ -5,12 +5,6 @@ d88dmp
 
 [日本語(Japanese)](/README_J.md)
 
-
-
-
-
-![example](https://github.com/ORYZAPAO/d88dmp/blob/main/image/d88info_img.png?raw=true)
-
 Introduction
 -----------
 d88dmp is D88 file dump tool.   
@@ -25,7 +19,7 @@ The Output of d88dmp are shown below.
   + Floppy Disk Type(2D/2DD/2HD)
   + Floppy Disk Size(as byte)
 ### Track Table
-  + Offset to any Track
+  + Offset to Track
     + ![example](https://github.com/ORYZAPAO/d88dmp/blob/main/image/TrackTable_d88dmp.png?raw=true)
 ### Sector Header
   + Cylinder Number(Zero Start...)
@@ -37,13 +31,11 @@ The Output of d88dmp are shown below.
   + Delete Flag
   + Status
   + Data Size of Sector(as byte)
-
-### Sector Data
-  + Byte Dump Data
     + Sector Summary  
 ![example](https://github.com/ORYZAPAO/d88dmp/blob/main/image/SectorSummary_d88dmp.png?raw=true)
-    + Sector Header and Data 
-![example](https://github.com/ORYZAPAO/d88dmp/blob/main/image/Sector_Header_and_Data_d88dmp.png?raw=true)
+### Sector Data
+  + Header and Data
+    + ![example](https://github.com/ORYZAPAO/d88dmp/blob/main/image/Sector_Header_and_Data_d88dmp.png?raw=true)
 
 
 

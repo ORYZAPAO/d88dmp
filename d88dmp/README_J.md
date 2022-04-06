@@ -4,7 +4,6 @@ d88dmp
 [![CircleCI](https://circleci.com/gh/ORYZAPAO/d88dmp/tree/main.svg?style=svg)](https://circleci.com/gh/ORYZAPAO/d88dmp/tree/main)
 
 [English](/README.md)
-![example](https://github.com/ORYZAPAO/d88dmp/blob/main/image/d88info_img.png?raw=true)
 
 はじめに
 --------
@@ -22,6 +21,7 @@ d88ファイル解析およびRust勉強用として、個人的に作成した�
   + ディスクの種類(2D/2DD/2HD)
   + ディスクサイズ(byte単位)
 ### 各トラックへのオフセットテーブル
+  + ![example](https://github.com/ORYZAPAO/d88dmp/blob/main/image/TrackTable_d88dmp.png?raw=true)
 ### セクタヘッダ情報
   + シリンダ番号(0開始〜)
   + サイド情報(0:表、1:裏) 
@@ -32,8 +32,12 @@ d88ファイル解析およびRust勉強用として、個人的に作成した�
   + 削除フラグ
   + ステータス
   + セクタのデータサイズ(byte単位)
+    + セクタ情報のサマリ  
+![example](https://github.com/ORYZAPAO/d88dmp/blob/main/image/SectorSummary_d88dmp.png?raw=true)
 ### セクタのデータ
   + データをbyte単位でダンプ  
+    + ![example](https://github.com/ORYZAPAO/d88dmp/blob/main/image/Sector_Header_and_Data_d88dmp.png?raw=true)
+
 
 インストール方法
 ---------------------
