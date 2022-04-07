@@ -12,6 +12,14 @@ pub fn ERROR(err_mes: &str) {
 }
 
 impl ReportD88 {
+    /// Print D88 File Header Titke Bar(Helper function)
+    ///
+    /// タイトルバーを表示(D88ファイルヘッダ)
+    ///
+    pub fn print_d88_file_header_title_bar(&self) {
+        println!("D88 File Header Summary");
+    }
+
     /// Print Track Offset Table Bar(Helper function)
     ///
     /// タイトルバーを表示(Track)
@@ -19,20 +27,21 @@ impl ReportD88 {
     pub fn print_track_offset_table_bar(&self) {
         println!("Track Offset Table");
         println!();
-        println!("hex  dec  +0    +1    +2    +3    +4    +5    +6    +7   ");
-        print!("--- ----  -----------------------------------------------");
+        println!("Track No.");
+        println!("hex dec   +0     +1     +2     +3     +4     +5     +6     +7    ");
+        print!("--- ----  ------ ------ ------ ------ ------ ------ ------ ------");
     }
 
-    /// Print Sector Size Bar(Helper function)
+    /// Print Sector Summary Bar(Helper function)
     ///
     /// タイトルバーを表示(Sector)
     ///
     pub fn print_sector_summary_bar(&self) {
         println!("Sector Summary");
         println!();
-        println!("Track    Side Sector");
-        println!("hex  dec No.  No. Num  Offset  etc.");
-        println!("--- ---- ---  --- ---  ------  ---------------------------------- ...");
+        println!("Track    Side Sector            Header Parameter");
+        println!("hex dec  No.  No. Num  Offset   ");
+        println!("--- ---- ---  --- ---  -------  ---------------------------------- ...");
     }
 
     /// Print Offset Bar(Helper function)
@@ -40,8 +49,8 @@ impl ReportD88 {
     /// タイトルバーを表示(Sector)
     ///
     pub fn print_offset_bar(&self) {
-        println!("Offst  +0 +1 +2 +3 +4 +5 +6 +7 +8 +9 +a +b +c +d +e +f                 ");
-        println!("-----  -----------------------------------------------                 ");
+        println!("Offset  +0 +1 +2 +3 +4 +5 +6 +7 +8 +9 +a +b +c +d +e +f                 ");
+        println!("------  -----------------------------------------------                 ");
     }
 
     /// Print 16byte (Helper function)
@@ -96,10 +105,10 @@ impl ReportD88 {
         // Offset Address
         //
         if !self.nocolor_flg {
-            print!("{}  ", Color::Cyan.paint(&(format!("{:05x}", offset))));
+            print!("{}  ", Color::Cyan.paint(&(format!("{:06x}", offset))));
         } else {
             //#[allow(clippy::format_in_format_args)]
-            print!("{}  ", format!("{:05x}", offset));
+            print!("{}  ", format!("{:06x}", offset));
         }
 
         // 16 byte
