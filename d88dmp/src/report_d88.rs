@@ -165,6 +165,17 @@ impl ReportD88 {
         let header = &(self.d88fileio.disk.header);
 
         // ----------------------------------------
+        // Report File Header Summary
+        // ----------------------------------------
+        self.print_d88_file_header_title_bar();
+        println!("  {}", self.d88fileio.disk.get_disk_name());
+        println!("  Protect{}", self.d88fileio.disk.get_disk_write_protect());
+        println!("  {}", self.d88fileio.disk.get_disk_type());
+        println!("  {}", self.d88fileio.disk.get_disk_size());
+        println!();
+        println!();
+
+        // ----------------------------------------
         // Report Track Offset Table
         // ----------------------------------------
         self.print_track_offset_table_bar();
@@ -174,19 +185,19 @@ impl ReportD88 {
 
                 if self.nocolor_flg {
                     print!(
-                        "{}  {:05x} ",
+                        "{}  {:06x} ",
                         (format!("{0:2x}h {0:3}d", n)),
                         header.track_offset_tbl[n]
                     );
                 } else {
                     print!(
-                        "{}  {:05x} ",
+                        "{}  {:06x} ",
                         Color::Cyan.paint(format!("{0:2x}h {0:3}d", n)),
                         header.track_offset_tbl[n]
                     );
                 }
             } else {
-                print!("{:05x} ", header.track_offset_tbl[n]);
+                print!("{:06x} ", header.track_offset_tbl[n]);
             }
         }
         println!();
@@ -221,7 +232,7 @@ impl ReportD88 {
                 }
 
                 //
-                let offset_formated = format!("{:05x}h ", sector.offset);
+                let offset_formated = format!("{:06x}h ", sector.offset);
                 if !self.nocolor_flg {
                     print!("{} ", Color::Cyan.paint(offset_formated));
                 } else {
@@ -237,7 +248,6 @@ impl ReportD88 {
                     sector.get_mark(),
                     sector.get_data_size(),
                 );
-
             } // for sector in track.sector_tbl.iter() {
         } // for track in self.d88fileio.disk.track_tbl.iter() {
 
