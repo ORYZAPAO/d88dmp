@@ -220,7 +220,7 @@ impl ReportD88 {
                 //
                 let tso_formated = if sector_ct == 0 {
                     format!(
-                        "{0:02}h {0:3}d {1:3}  {2:3} {3:3} ",
+                        "{0:02x}h {0:3}d {1:3}  {2:3} {3:3} ",
                         sector.header.track,
                         sector.header.side,
                         sector.header.sector,
