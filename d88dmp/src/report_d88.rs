@@ -180,24 +180,29 @@ impl ReportD88 {
         // ----------------------------------------
         self.print_track_offset_table_bar();
         for n in 0..164 {
+            // format
+            let track_num_formated = format!("{0:2x}h {0:3}d", n);
+            let track_offset_formated = if header.track_offset_tbl[n] == 0 {
+                "------".to_string()
+            } else {
+                format!("{:06x}", header.track_offset_tbl[n])
+            };
+
+            //
             if (n % 8) == 0 {
                 println!();
 
                 if self.nocolor_flg {
-                    print!(
-                        "{}  {:06x} ",
-                        (format!("{0:2x}h {0:3}d", n)),
-                        header.track_offset_tbl[n]
-                    );
+                    print!("{}  {} ", track_num_formated, track_offset_formated);
                 } else {
                     print!(
-                        "{}  {:06x} ",
-                        Color::Cyan.paint(format!("{0:2x}h {0:3}d", n)),
-                        header.track_offset_tbl[n]
+                        "{}  {} ",
+                        Color::Cyan.paint(track_num_formated),
+                        track_offset_formated
                     );
                 }
             } else {
-                print!("{:06x} ", header.track_offset_tbl[n]);
+                print!("{} ", track_offset_formated);
             }
         }
         println!();
@@ -213,7 +218,7 @@ impl ReportD88 {
         for track in self.d88fileio.disk.track_tbl.iter() {
             for (sector_ct, sector) in track.sector_tbl.iter().enumerate() {
                 //
-                let mes = if sector_ct == 0 {
+                let tso_formated = if sector_ct == 0 {
                     format!(
                         "{0:02}h {0:3}d {1:3}  {2:3} {3:3} ",
                         sector.header.track,
@@ -226,9 +231,9 @@ impl ReportD88 {
                 };
 
                 if !self.nocolor_flg {
-                    print!("{} ", Color::Cyan.paint(&mes));
+                    print!("{} ", Color::Cyan.paint(&tso_formated));
                 } else {
-                    print!("{} ", mes);
+                    print!("{} ", tso_formated);
                 }
 
                 //
