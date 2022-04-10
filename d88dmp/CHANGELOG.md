@@ -1,5 +1,6 @@
 更新履歴
 ----------
++ ver0.13.4 2022.04.11 1)Bug fix(Offset column shift, Sector summary) 2)Add D88 file header summary
 + ver0.13.3 2022.04.03 Add Sector Summary Report.
 + ver0.13.2 2022.03.13 Add printing offset bar in --potion option.
 + ver0.13.1 2022.03.01 Fix Sector Header's bug
