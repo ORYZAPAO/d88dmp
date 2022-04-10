@@ -21,7 +21,7 @@ d88ファイル解析およびRust勉強用として、個人的に作成した�
   + ディスクの種類(2D/2DD/2HD)
   + ディスクサイズ(byte単位)
 ### 各トラックへのオフセットテーブル
-  + ![example](https://github.com/ORYZAPAO/d88dmp/blob/main/image/TrackTable_d88dmp.png?raw=true)
+  + ![example](https://github.com/ORYZAPAO/d88dmp/blob/main/image/d88dmp_track_offset.png?raw=true)
 ### セクタヘッダ情報
   + シリンダ番号(0開始〜)
   + サイド情報(0:表、1:裏) 
@@ -33,10 +33,10 @@ d88ファイル解析およびRust勉強用として、個人的に作成した�
   + ステータス
   + セクタのデータサイズ(byte単位)
     + セクタ情報のサマリ  
-![example](https://github.com/ORYZAPAO/d88dmp/blob/main/image/SectorSummary_d88dmp.png?raw=true)
+      + ![example](https://github.com/ORYZAPAO/d88dmp/blob/main/image/d88dmp_sector_summary.png?raw=true)
 ### セクタのデータ
   + データをbyte単位でダンプ  
-    + ![example](https://github.com/ORYZAPAO/d88dmp/blob/main/image/Sector_Header_and_Data_d88dmp.png?raw=true)
+    + ![example](https://github.com/ORYZAPAO/d88dmp/blob/main/image/d88dmp_row_data.png?raw=true)
 
 
 インストール方法
