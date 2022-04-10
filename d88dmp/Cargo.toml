@@ -12,7 +12,7 @@ keywords = [
 ]
 license = "MIT"
 readme = "README.md"
-description = "Dump tool for disk image D88 format."
+description = "Dump tool for D88 disk image file."
 
 ##documentation = 
 
