@@ -20,7 +20,7 @@ The Output of d88dmp are shown below.
   + Floppy Disk Size(as byte)
 ### Track Table
   + Offset to Track
-    + ![example](https://github.com/ORYZAPAO/d88dmp/blob/main/image/TrackTable_d88dmp.png?raw=true)
+    + ![example](https://github.com/ORYZAPAO/d88dmp/blob/main/image/d88dmp_track_offset.png?raw=true)
 ### Sector Header
   + Cylinder Number(Zero Start...)
   + Side (0:surface、1:back) 
@@ -32,10 +32,10 @@ The Output of d88dmp are shown below.
   + Status
   + Data Size of Sector(as byte)
     + Sector Summary  
-![example](https://github.com/ORYZAPAO/d88dmp/blob/main/image/SectorSummary_d88dmp.png?raw=true)
+      + ![example](https://github.com/ORYZAPAO/d88dmp/blob/main/image/d88dmp_sector_summary.png?raw=true)
 ### Sector Data
   + Header and Data
-    + ![example](https://github.com/ORYZAPAO/d88dmp/blob/main/image/Sector_Header_and_Data_d88dmp.png?raw=true)
+    + ![example](https://github.com/ORYZAPAO/d88dmp/blob/main/image/d88dmp_row_data.png?raw=true)
 
 
 
