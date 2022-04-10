@@ -1,6 +1,6 @@
 [package]
 name = "d88dmp"
-version = "0.13.3"
+version = "0.13.4"
 authors = ["ORYZAPAO <oryzapao@gmail.com>"]
 edition = "2018"
 repository = "https://github.com/ORYZAPAO/d88dmp"
@@ -12,7 +12,7 @@ keywords = [
 ]
 license = "MIT"
 readme = "README.md"
-description = "Dump tool for disk image D88 format."
+description = "Dump tool for D88 disk image file."
 
 ##documentation = 
 
