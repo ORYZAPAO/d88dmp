@@ -39,7 +39,7 @@ impl ReportD88 {
     pub fn print_sector_summary_bar(&self) {
         println!("Sector Summary");
         println!();
-        println!("Track    Side Sector            Header Parameter");
+        println!("Track    Side Sector   Data      Header Parameter");
         println!("hex dec  No.  No. Num  Offset   ");
         println!("--- ---- ---  --- ---  -------  ---------------------------------- ...");
     }
