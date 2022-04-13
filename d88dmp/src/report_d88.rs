@@ -23,7 +23,10 @@ pub struct ReportD88 {
     pub path: Option<String>,
     pub noinfo_flg: bool,
     pub nocolor_flg: bool,
+    pub summary_only_flg: bool,
     pub sort_by_sector: bool,
+    pub verbose_flg: bool,
+
     pub position: Option<Position>,
     pub d88fileio: D88FileIO,
 }
@@ -42,6 +45,8 @@ impl ReportD88 {
 
         let _noinfo_flg: bool = _cmdline_info.is_present("no-info");
         let _nocolor_flg: bool = _cmdline_info.is_present("no-color");
+        let _summary_only_flg: bool = _cmdline_info.is_present("summary");
+        let _verbose_flg: bool = _cmdline_info.is_present("verbose");
         let mut _sort_by_sector: bool = _cmdline_info.is_present("Sort by Disk Sector Order");
 
         let _position = if let Some(pos) = _cmdline_info.value_of("TRACK,SIDE,SECTOR") {
@@ -70,7 +75,10 @@ impl ReportD88 {
             noinfo_flg: _noinfo_flg,
             nocolor_flg: _nocolor_flg,
             sort_by_sector: _sort_by_sector,
+            summary_only_flg: _summary_only_flg,
+            verbose_flg: _verbose_flg,
             position: _position,
+
             d88fileio: D88FileIO::default(),
         }
     }
@@ -126,7 +134,17 @@ impl ReportD88 {
             self.print_offset_bar();
             self.report_sector(sector);
         } else {
-            // Report All
+            // Summary
+            if self.summary_only_flg || self.verbose_flg {
+                let _ = self.report_d88_summary();
+            }
+
+            // Byte Image
+            if self.summary_only_flg {
+                return;
+            }
+            println!();
+            println!();
             let _ = self.report_d88_header();
             for track in self.d88fileio.disk.track_tbl.iter() {
                 self.report_track(track);
@@ -144,10 +162,10 @@ impl ReportD88 {
         self.print_sector(sector);
     }
 
-    /// Report D88 Header (Helper function)
+    /// Report D88 Summary (Helper function)
     ///
     /// `report_d88` から呼び出される内部関数。  
-    /// D88ファイルのヘッダ情報を表示する
+    /// D88ファイルのサマリ情報を表示する
     ///
     /// # Argument
     ///
@@ -159,7 +177,7 @@ impl ReportD88 {
     ///   * if Error, return 0
     ///
     #[allow(clippy::format_in_format_args)]
-    pub fn report_d88_header(&self) -> usize {
+    pub fn report_d88_summary(&self) -> usize {
         // Get File Header
         //
         let header = &(self.d88fileio.disk.header);
@@ -257,10 +275,33 @@ impl ReportD88 {
         } // for track in self.d88fileio.disk.track_tbl.iter() {
 
         // ----------------------------------------
-        // Report File Header (Byte Image)
+        mem::size_of::<D88_Header>()
+    }
+
+    /// Report D88 Summary (Helper function)
+    ///
+    /// `report_d88` から呼び出される内部関数。  
+    /// D88ファイルのヘッダ情報を表示する
+    ///
+    /// # Argument
+    ///
+    ///   * `reader` BufferReader instance at D88 File
+    ///
+    /// # Return
+    ///
+    ///   * if Success, return D88 Header Size.  
+    ///   * if Error, return 0
+    ///
+    #[allow(clippy::format_in_format_args)]
+    pub fn report_d88_header(&self) -> usize {
+        // Get File Header
+        //
+        let header = &(self.d88fileio.disk.header);
+
         // ----------------------------------------
-        println!();
-        println!();
+        // [ByteImage] D88 File Header
+        //   32byte
+        // ----------------------------------------
         let byte_img;
         #[allow(clippy::clone_on_copy)]
         unsafe {
@@ -269,7 +310,7 @@ impl ReportD88 {
         }
 
         self.print_offset_bar();
-        self.print_16byte(&byte_img, 0x0000_u64, ansi_term::Color::Green);
+        self.print_16byte(&byte_img, 0x00000_u64, ansi_term::Color::Green);
 
         // Report File Header
         //
@@ -278,9 +319,37 @@ impl ReportD88 {
             self.d88fileio.disk.get_disk_name(),
             self.d88fileio.disk.get_disk_write_protect(),
             self.d88fileio.disk.get_disk_type(),
-            self.d88fileio.disk.get_disk_size()
+            self.d88fileio.disk.get_disk_size(),
         );
         println!();
+
+        // ----------------------------------------
+        // [ByteImage] Offset to Track
+        //   32bit(4byte) x 164
+        // ----------------------------------------
+        let mut offset = 0x00020_u64;
+        let mut buf32x4 = [0u32; 4];
+        for (ct, track_offset) in header.track_offset_tbl.iter().enumerate() {
+            buf32x4[ct % 4] = *track_offset;
+            if (ct % 4) == 3 {
+                unsafe {
+                    let buf8x16 = mem::transmute::<[u32; 4], [u8; 16]>(buf32x4); // 32bit x 4 --> 8bit x 16
+                    self.print_16byte(&buf8x16, offset, ansi_term::Color::Yellow);
+                }
+
+                print!("TrackOffset ");
+                for ofst in buf32x4.iter() {
+                    let formated = if *ofst == 0 {
+                        "------".to_string()
+                    } else {
+                        format!("{:06x}", ofst)
+                    };
+                    print!("{}, ", formated);
+                }
+                println!();
+                offset += 16;
+            }
+        }
 
         // ----------------------------------------
         mem::size_of::<D88_Header>()
