@@ -1,6 +1,6 @@
 [package]
 name = "d88dmp"
-version = "0.13.4"
+version = "0.14.0"
 authors = ["ORYZAPAO <oryzapao@gmail.com>"]
 edition = "2018"
 repository = "https://github.com/ORYZAPAO/d88dmp"
