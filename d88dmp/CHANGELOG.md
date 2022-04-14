@@ -2,7 +2,7 @@
 ----------
 + ver0.14.0 2022.04.14 Refactoring, etc..
   + Modify report format.
-  + Add options
+  + Add new options
     + --verbose
     + --summary
   + Bug fix report (file header, sector)
