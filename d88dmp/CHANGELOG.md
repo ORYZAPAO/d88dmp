@@ -1,6 +1,6 @@
 更新履歴
 ----------
-+ ver0.14.0 2022.04.14 Refactoring, etc..
++ ver0.14.0 2022.04.15 Refactoring, etc..
   + Modify report format.
   + Add new options
     + --verbose
