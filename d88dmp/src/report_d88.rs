@@ -307,15 +307,16 @@ impl ReportD88 {
         unsafe {
             byte_img =
                 mem::transmute::<D88_Header, [u8; mem::size_of::<D88_Header>()]>((*header).clone());
-        }      
+        }
         self.print_offset_bar();
 
-        self.print_16byte(&byte_img, 0x00000_u64, ansi_term::Color::Green);       //   0 - 16 byte        
-        print!("{}", self.d88fileio.disk.get_disk_name() );
+        self.print_16byte(&byte_img, 0x00000_u64, ansi_term::Color::Green); /////////   0 - 16 byte
+        print!("{}", self.d88fileio.disk.get_disk_name());
         println!();
-        
+
         self.print_16byte(&byte_img[16..], 0x00010_u64, ansi_term::Color::Green); //   16 - 31 byte
-        print!("{}, {}, {}",
+        print!(
+            "{}, {}, {}",
             self.d88fileio.disk.get_disk_write_protect(),
             self.d88fileio.disk.get_disk_type(),
             self.d88fileio.disk.get_disk_size(),
@@ -349,7 +350,6 @@ impl ReportD88 {
                 offset += 16;
             }
         }
-      //println!();
 
         // ----------------------------------------
         mem::size_of::<D88_Header>()
