@@ -11,8 +11,8 @@ d88dmp
 日本のレトロPCエミュレータ用のディスクイメージ形式*.d88形式のファイルを、byte単位でテキストでダンプするツールです。  
 d88ファイル解析およびRust勉強用として、個人的に作成したものです。  
 
-+ [d88dmp](https://github.com/ORYZAPAO/d88dmp/tree/main/d88dmp)  
++ [d88dmp](/d88dmp/README_J.md)  
   D88ファイルのダンプツール.  
-+ [D88FileIO](https://github.com/ORYZAPAO/d88dmp/tree/main/crates/D88FileIO)   
++ [D88FileIO](/crates/D88FileIO/README_J.md)   
   d88dmpで使用している、D88ファイルアクセスの為のシンプルなライブラリ
 
