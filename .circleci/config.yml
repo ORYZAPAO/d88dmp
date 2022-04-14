@@ -8,11 +8,11 @@ jobs:
     steps:
       - checkout
       - run:
-          name: rustup version
-          command: rustup --version
-      - run:
           name: rustup update
           command: rustup update 
+      - run:
+          name: rustup version
+          command: rustup --version
       - run:
           name: rustup component add
           command: rustup component add clippy rustfmt
