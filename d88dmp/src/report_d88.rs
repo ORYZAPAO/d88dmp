@@ -300,23 +300,22 @@ impl ReportD88 {
 
         // ----------------------------------------
         // [ByteImage] D88 File Header
-        //   32byte
+        //   16byte
         // ----------------------------------------
         let byte_img;
         #[allow(clippy::clone_on_copy)]
         unsafe {
             byte_img =
                 mem::transmute::<D88_Header, [u8; mem::size_of::<D88_Header>()]>((*header).clone());
-        }
-
+        }      
         self.print_offset_bar();
-        self.print_16byte(&byte_img, 0x00000_u64, ansi_term::Color::Green);
 
-        // Report File Header
-        //
-        print!(
-            "{}, {}, {}, {}",
-            self.d88fileio.disk.get_disk_name(),
+        self.print_16byte(&byte_img, 0x00000_u64, ansi_term::Color::Green);       //   0 - 16 byte        
+        print!("{}", self.d88fileio.disk.get_disk_name() );
+        println!();
+        
+        self.print_16byte(&byte_img[16..], 0x00010_u64, ansi_term::Color::Green); //   16 - 31 byte
+        print!("{}, {}, {}",
             self.d88fileio.disk.get_disk_write_protect(),
             self.d88fileio.disk.get_disk_type(),
             self.d88fileio.disk.get_disk_size(),
@@ -344,12 +343,13 @@ impl ReportD88 {
                     } else {
                         format!("{:06x}", ofst)
                     };
-                    print!("{}, ", formated);
+                    print!("{} ", formated);
                 }
                 println!();
                 offset += 16;
             }
         }
+      //println!();
 
         // ----------------------------------------
         mem::size_of::<D88_Header>()
