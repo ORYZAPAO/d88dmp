@@ -4,6 +4,7 @@ version = "0.14.0"
 authors = ["ORYZAPAO <oryzapao@gmail.com>"]
 edition = "2018"
 repository = "https://github.com/ORYZAPAO/d88dmp"
+documentation = "https://docs.rs/d88dmp"
 keywords = [
          "d88",
          "dump",
@@ -12,9 +13,8 @@ keywords = [
 ]
 license = "MIT"
 readme = "README.md"
-description = "Dump tool for D88 disk image file."
+description = "*.D88 file dump tool."
 
-##documentation = 
 
 [dependencies]
 libc = "0.2"
