@@ -12,13 +12,14 @@ D88 file is disk Image for Retro PC, [NEC PC-8801 Series](https://en.wikipedia.o
 
 Output 
 --------
-The Output of d88dmp are shown below. 
+The Output of d88dmp are shown below.  
+If you use --summary option, output disk header, track offset table and sector summary.
 ### Floppy Disk Header
   + Disk Name
   + Write Protect
   + Floppy Disk Type(2D/2DD/2HD)
   + Floppy Disk Size(as byte)
-### Track Table
+### Track Offset Table
   + Offset to Track
     + ![example](https://github.com/ORYZAPAO/d88dmp/blob/main/image/d88dmp_track_offset.png?raw=true)
 ### Sector Header
@@ -59,7 +60,7 @@ How to Use
 
 ## usage 
 ```
-d88dmp ver 0.13.0
+d88dmp ver 0.14.0
 ORYZA (https://github.com/ORYZAPAO)
 D88 Disk Image Dump.
 
@@ -77,16 +78,22 @@ OPTIONS:
             No information
 
         --no-color
-            No Color
+            No color
 
     -p, --position <TRACK,SIDE,SECTOR>
-            Sector Position
+            Sector position
               <TRACK>  0,1,2, ...
               <SIDE>   0:front or 1:back
               <SECTOR> 1,2,3, ...
 
     -s, --sort
             Sort by disk sector order
+
+        --summary
+            Summary only
+
+    -v, --verbose
+            Verbose report
 
     -V, --version
             Print version information

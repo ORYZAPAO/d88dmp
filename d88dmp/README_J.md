@@ -15,6 +15,7 @@ d88ファイル解析およびRust勉強用として、個人的に作成した�
 --------
 
 下記情報を表示します。  
+--summaryオプションをつけると、サマリ情報を表示します。  
 ### ディスクヘッダ情報
   + ディスク名
   + ライトプロテクトの有無
@@ -62,24 +63,43 @@ cargo install d88dmp
 
 ## usage 
 ```
+d88dmp ver 0.14.0
+ORYZA (https://github.com/ORYZAPAO)
+D88 Disk Image Dump.
 
 USAGE:
     d88dmp [OPTIONS] <*.D88>
 
 ARGS:
-    <*.D88>    **.D88 ディスクイメージのファイル
+    <*.D88>    D88 Disk Image
 
 OPTIONS:
-    -h, --help                            ヘルプメッセージを表示
-    -n, --no-info                         ディスクやセクタのヘッダ情報を表示しない
-        --no-color                        カラー表示の無効化
-    -p, --position <TRACK,SIDE,SECTOR>    特定のセクタを表示
-                                            トラック番号   0,1,2, ... (0スタート)
-                                            ディスクサイド 0:表, 1:裏 
-                                            セクタ番号     1,2,3, ... (1スタート)
-    -s, --sort                            セクタ番号順に表示
-    -V, --version                         バージョン情報を表示
+    -h, --help
+            Print help information      ヘルプメッセージ
 
+    -n, --no-info
+            No information              ディスクやセクタのヘッダ情報を表示しない
+
+        --no-color
+            No color                    カラー表示の無効化
+
+    -p, --position <TRACK,SIDE,SECTOR>  特定のセクタを表示
+            Sector position
+              <TRACK>  0,1,2, ...         トラック番号   0,1,2, ... (0スタート)
+              <SIDE>   0:front or 1:back  ディスクサイド 0:表, 1:裏 
+              <SECTOR> 1,2,3, ...         セクタ番号     1,2,3, ... (1スタート)
+
+    -s, --sort                          セクタ番号順に表示(セクタ番号順に記録されていない場合)
+            Sort by disk sector order
+
+        --summary
+            Summary only                サマリのみ表示（データのダンプリストは表示しない）
+
+    -v, --verbose
+            Verbose report              詳細表示（サマリ、データのダンプリストを表示）
+
+    -V, --version
+            Print version information   バージョン情報
 ```
 
 実行例）X1 turbo用のturbo CP/Mでファーマットしたディスクイメージ(CPM_data.d88)を表示  
