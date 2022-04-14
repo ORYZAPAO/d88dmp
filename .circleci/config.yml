@@ -11,11 +11,14 @@ jobs:
           name: rustup version
           command: rustup --version
       - run:
+          name: rustup update
+          command: rustup update 
+      - run:
           name: rustup component add
           command: rustup component add clippy rustfmt
-#      - run:
-#          name: fmt
-#          command: cargo fmt -- --check
+      - run:
+          name: fmt
+          command: cargo fmt -- --check
       - restore_cache:
           keys:
             - v1-cargo-lock-{{ checksum "Cargo.lock" }}
