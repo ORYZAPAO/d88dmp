@@ -13,6 +13,6 @@ d88ファイル解析およびRust勉強用として、個人的に作成した�
 
 + [d88dmp](/d88dmp/README_J.md)  
   D88ファイルのダンプツール.  
-+ [D88FileIO](/crates/D88FileIO/README_J.md)   
++ [D88FileIO](/crates/D88FileIO/README.md)   
   d88dmpで使用している、D88ファイルアクセスの為のシンプルなライブラリ
 
